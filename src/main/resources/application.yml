@@ -1,0 +1,6 @@
+server:
+  port: 8080
+value: 13 
+person:
+  name: "ds"
+  age: 14
