@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +25,7 @@ public class MapController
 	{
 
 		return this.mapservice.findByWayId(tile);
-		// return null;
-	}
 
-	@RequestMapping(value = "/findDetail", method = RequestMethod.GET)
-	public Map<String, Object> findDetail(final HttpServletRequest request)
-	{
-		final String wayid = request.getParameter("wayid");
-		return null;
 	}
 
 	@RequestMapping(value = "/findPositions", method = RequestMethod.POST)
@@ -47,5 +37,11 @@ public class MapController
 			return list;
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "/findWayAndDateById/{id}", method = RequestMethod.GET)
+	public List<String> findWayAndDateById(@PathVariable final long id)
+	{
+		return this.mapservice.findWayAndDateById(id);
 	}
 }

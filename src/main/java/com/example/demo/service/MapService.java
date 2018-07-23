@@ -12,4 +12,6 @@ public interface MapService
 
 	public List<RoadesResponse> findposition(BoundRequest bound) throws Exception;
 
+	public List<String> findWayAndDateById(long id);
+
 }

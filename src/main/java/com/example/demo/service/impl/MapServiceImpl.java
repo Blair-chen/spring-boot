@@ -1,14 +1,18 @@
 package com.example.demo.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.mapper.WayAndDateMapper;
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.Position;
 import com.example.demo.model.RoadesResponse;
+import com.example.demo.model.WayAndDate;
 import com.example.demo.service.MapService;
 import com.example.demo.utils.EdgeUtil;
 import com.github.davidmoten.rtree.Entry;
@@ -21,6 +25,8 @@ import com.telenav.modules.mapping.graph.Edge;
 @Service
 public class MapServiceImpl implements MapService
 {
+	@Autowired
+	private WayAndDateMapper wayAndDateMapper;
 
 	public RTree<Edge, Geometry> CreateTree(final int level)
 	{
@@ -128,6 +134,19 @@ public class MapServiceImpl implements MapService
 
 		return result;
 
+	}
+
+	@Override
+	public List<String> findWayAndDateById(final long id)
+	{
+		final List<WayAndDate> list = this.wayAndDateMapper.findWayAndDateByWayid(id);
+		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		final List<String> result = new ArrayList<String>();
+		for (final WayAndDate way : list)
+		{
+			result.add(simpleDateFormat.format(way.getTime()));
+		}
+		return result;
 	}
 
 	public RoadesResponse getWayResponse(final Edge edge) throws Exception
