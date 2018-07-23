@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.mapper.SpeedMapper;
 import com.example.demo.mapper.WayAndDateMapper;
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.Position;
 import com.example.demo.model.RoadesResponse;
+import com.example.demo.model.Speed;
 import com.example.demo.model.WayAndDate;
 import com.example.demo.service.MapService;
 import com.example.demo.utils.EdgeUtil;
@@ -27,6 +29,9 @@ public class MapServiceImpl implements MapService
 {
 	@Autowired
 	private WayAndDateMapper wayAndDateMapper;
+
+	@Autowired
+	private SpeedMapper speedMapper;
 
 	public RTree<Edge, Geometry> CreateTree(final int level)
 	{
@@ -133,6 +138,13 @@ public class MapServiceImpl implements MapService
 		}
 
 		return result;
+
+	}
+
+	@Override
+	public List<Speed> findSpeed(final long wayid, final String date)
+	{
+		return this.speedMapper.findSpeedByWayidAndDate(wayid, date);
 
 	}
 

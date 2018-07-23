@@ -2,8 +2,6 @@ package com.example.demo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.demo.controller.DemoControlller;
+import com.example.demo.mapper.SpeedMapper;
 import com.example.demo.mapper.WayAndDateMapper;
-import com.example.demo.model.WayAndDate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,6 +26,8 @@ public class DemoApplicationTests
 
 	@Autowired
 	private WayAndDateMapper wayAndDateMapper;
+	@Autowired
+	private SpeedMapper speedMapper;
 
 	@Test
 	public void contextLoads() throws Exception
@@ -47,8 +47,7 @@ public class DemoApplicationTests
 	public void test()
 	{
 
-		final List<WayAndDate> list = this.wayAndDateMapper.findWayAndDateById(761699319);
-		System.out.println(list);
+		System.out.println(this.speedMapper.findSpeedByWayidAndDate(1143235428, "2018-07-12"));
 	}
 
 }

@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.RoadesResponse;
+import com.example.demo.model.Speed;
 import com.example.demo.service.MapService;
 
 @RestController
@@ -37,6 +40,16 @@ public class MapController
 			return list;
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "/findSpeed", method = RequestMethod.GET)
+	public List<Speed> findSpeed(final HttpServletRequest request)
+	{
+
+		final long wayid = Long.parseLong(request.getParameter("wayid"));
+		final String date = request.getParameter("date");
+		return this.mapservice.findSpeed(wayid, date);
+
 	}
 
 	@RequestMapping(value = "/findWayAndDateById/{id}", method = RequestMethod.GET)
