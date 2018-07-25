@@ -1,8 +1,6 @@
 package com.example.demo.utils;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import com.telenav.modules.mapping.graph.Edge;
@@ -10,40 +8,58 @@ import com.telenav.modules.mapping.graph.Edge;
 public class EdgeUtil
 {
 
-	public static List<Edge> levelZero = new ArrayList<Edge>();
-	public static List<Edge> levelOne = new ArrayList<Edge>();
-	public static List<Edge> levelTwo = new ArrayList<Edge>();
-	public static List<Edge> levelThree = new ArrayList<Edge>();
-	public static List<Edge> levelFour = new ArrayList<Edge>();
-
 	public static Map<Long, Edge> mapZero = new Hashtable<Long, Edge>();
 	public static Map<Long, Edge> mapOne = new Hashtable<Long, Edge>();
 	public static Map<Long, Edge> mapThree = new Hashtable<Long, Edge>();
 	public static Map<Long, Edge> mapFour = new Hashtable<Long, Edge>();
 	public static Map<Long, Edge> mapTwo = new Hashtable<Long, Edge>();
 
-	public static void initEdge(final int level, final Edge edge)
+	public static Map<Long, Edge> findListEdge(final int level)
 	{
-
 		switch (level)
 		{
 			case 0:
-				levelZero.add(edge);
-				break;
+				return EdgeUtil.mapZero;
+
 			case 1:
-				levelOne.add(edge);
-				break;
+				return EdgeUtil.mapOne;
+
 			case 2:
-				levelTwo.add(edge);
-				break;
+				return EdgeUtil.mapTwo;
+
 			case 3:
-				levelThree.add(edge);
-				break;
+				return EdgeUtil.mapThree;
+
 			case 4:
-				levelFour.add(edge);
-				break;
+				return EdgeUtil.mapFour;
 
 		}
+		return null;
+	}
+
+	public static Edge getEdge(final long wayId)
+	{
+		if (EdgeUtil.mapZero.containsKey(wayId))
+		{
+			return EdgeUtil.mapZero.get(wayId);
+		}
+		else if (EdgeUtil.mapOne.containsKey(wayId))
+		{
+			return EdgeUtil.mapOne.get(wayId);
+		}
+		else if (EdgeUtil.mapTwo.containsKey(wayId))
+		{
+			return EdgeUtil.mapTwo.get(wayId);
+		}
+		else if (EdgeUtil.mapThree.containsKey(wayId))
+		{
+			return EdgeUtil.mapThree.get(wayId);
+		}
+		else if (EdgeUtil.mapFour.containsKey(wayId))
+		{
+			return EdgeUtil.mapFour.get(wayId);
+		}
+		return null;
 	}
 
 	public static void initEdgeToMap(final int level, final Edge edge)

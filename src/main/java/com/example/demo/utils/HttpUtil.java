@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class HttpUtil
 {
-	public static String getFlowReport(final String requesturl, final Long id) throws Exception
+	public static String getFlowReport(final String requesturl, final String id) throws Exception
 	{
 		BufferedReader br = null;
 		try

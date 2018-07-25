@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Person;
-import com.example.demo.utils.EdgeUtil;
 
 @RestController
 public class DemoControlller
@@ -32,7 +31,7 @@ public class DemoControlller
 	@RequestMapping("/")
 	public String heloWord()
 	{
-		System.out.println(EdgeUtil.levelZero);
+
 		return "名字" + this.person.getName() + "年纪" + this.person.getAge();
 	}
 

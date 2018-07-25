@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.example.demo.utils.HttpUtil;
 import com.telenav.modules.mapping.graph.Edge;
 import com.telenav.modules.mapping.graph.Graph;
 import com.telenav.tdk.framework.modules.logging.Logger;
@@ -63,9 +62,9 @@ public class Test
 
 			final Long id = edge.getIdentifierAsLong();
 
-			final String str = HttpUtil.getFlowReport(anzUrl, id);
-			System.out.println(id);
-			System.out.println(str);
+			// final String str = HttpUtil.getFlowReport(anzUrl, id);
+			// System.out.println(id);
+			// System.out.println(str);
 			//
 			// str = "{" + str;
 			// str = "{\"status\": 11200,\"message\": \"OK\",json:{\"status\": 11200,\"message\":

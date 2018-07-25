@@ -5,12 +5,12 @@ import java.util.Date;
 public class WayAndDate
 {
 
-	private long id;
+	private String id;
 	private Date time;
 	private String way;
 	private long wayid;
 
-	public long getId()
+	public String getId()
 	{
 		return this.id;
 	}
@@ -30,7 +30,7 @@ public class WayAndDate
 		return this.wayid;
 	}
 
-	public void setId(final long id)
+	public void setId(final String id)
 	{
 		this.id = id;
 	}

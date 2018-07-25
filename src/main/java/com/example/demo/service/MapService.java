@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.RoadesResponse;
-import com.example.demo.model.Speed;
+import com.example.demo.model.SpeedVo;
 
 public interface MapService
 {
@@ -13,7 +13,7 @@ public interface MapService
 
 	public List<RoadesResponse> findposition(BoundRequest bound) throws Exception;
 
-	public List<Speed> findSpeed(long wayid, String date);
+	public List<SpeedVo> findSpeed(long wayid, String date);
 
 	public List<String> findWayAndDateById(long id);
 
