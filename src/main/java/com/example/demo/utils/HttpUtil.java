@@ -8,6 +8,14 @@ import java.net.URL;
 
 public class HttpUtil
 {
+	/**
+	 * get traffic flow
+	 * 
+	 * @param requesturl
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	public static String getFlowReport(final String requesturl, final String id) throws Exception
 	{
 		BufferedReader br = null;

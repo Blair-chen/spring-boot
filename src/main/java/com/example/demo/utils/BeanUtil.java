@@ -10,6 +10,12 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 public class BeanUtil
 {
+	/**
+	 * copy bean
+	 *
+	 * @param source
+	 * @param target
+	 */
 	public static void copyBeanNotNull2Bean(final Object source, final Object target)
 	{
 		final PropertyDescriptor sourceDescriptors[] = PropertyUtils.getPropertyDescriptors(source);
@@ -46,6 +52,12 @@ public class BeanUtil
 		}
 	}
 
+	/**
+	 * copy bean with reflect
+	 *
+	 * @param srcObj
+	 * @param destObj
+	 */
 	public static void copyPro(final Object srcObj, final Object destObj)
 	{
 
@@ -55,6 +67,7 @@ public class BeanUtil
 		{
 			try
 			{
+				srcField.setAccessible(true);
 				srcMap.put(srcField.getName(), srcField.get(srcObj)); // 获取属性值
 			}
 			catch (final Exception e)
@@ -71,6 +84,7 @@ public class BeanUtil
 			}
 			try
 			{
+				destField.setAccessible(true);
 				destField.set(destObj, srcMap.get(destField.getName())); // 给属性赋值
 			}
 			catch (final Exception e)

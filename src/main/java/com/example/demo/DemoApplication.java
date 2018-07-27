@@ -19,7 +19,6 @@ public class DemoApplication
 		final Logger logger = LoggerFactory.newLogger();
 		final File file = new File("D:\\files and word\\NT-ANZ.graph");
 		final Graph graph = Graph.forGraphResource(file, logger);
-		final long i = 0;
 		for (final Edge edge : graph.edges().asList())
 		{
 			EdgeUtil.initEdgeToMap(edge.getRoadFunctionalClass().getIdentifier(), edge);

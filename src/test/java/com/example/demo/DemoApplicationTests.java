@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.example.demo.controller.DemoControlller;
 import com.example.demo.mapper.SpeedMapper;
 import com.example.demo.mapper.WayAndDateMapper;
+import com.example.demo.model.Speed;
+import com.example.demo.model.SpeedVo;
+import com.example.demo.utils.BeanUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,15 +59,15 @@ public class DemoApplicationTests
 	@Test
 	public void beanTest()
 	{
-		// final Speed s = new Speed();
-		// s.setWayid(123);
-		// s.setSpeed(23);
-		// final SpeedVo svo = new SpeedVo();
+		final Speed s = new Speed();
+		s.setWayid(123);
+		s.setSpeed(23);
+		final SpeedVo svo = new SpeedVo();
+		BeanUtil.copyPro(s, svo);
 		// BeanUtil.copyPro(s, svo);
-		// // BeanUtil.copyPro(s, svo);
-		final int[] i = new int[] { 0, 1, 2, 4, 5, 7, 20 };
-		final int t = this.binSearch(i, 0, i.length - 1, 10);
-		System.out.println(t);
+		// final int[] i = new int[] { 0, 1, 2, 4, 5, 7, 20 };
+		// final int t = this.binSearch(i, 0, i.length - 1, 10);
+		// System.out.println(t);
 	}
 
 	public int binarySearch(final int[] speeds, final int date, final int min, final int max)

@@ -8,6 +8,14 @@ public class RoadesResponse
 	private List<Position> positions;
 	private int flow;
 
+	public RoadesResponse(final Long wayid, final List<Position> positions)
+	{
+		super();
+		this.wayid = wayid;
+		this.positions = positions;
+
+	}
+
 	public RoadesResponse(final Long wayid, final List<Position> positions, final int flow)
 	{
 		super();

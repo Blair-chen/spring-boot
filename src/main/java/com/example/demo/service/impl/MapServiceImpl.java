@@ -42,6 +42,7 @@ public class MapServiceImpl implements MapService
 
 	public RTree<Edge, Geometry> CreateTree(final int level)
 	{
+		//
 		RTree<Edge, Geometry> tree = RTree.create();
 		final Map<Long, Edge> map = EdgeUtil.findListEdge(level);
 		for (final Edge edge : map.values())
@@ -103,7 +104,7 @@ public class MapServiceImpl implements MapService
 				position.add(
 						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
 			}
-			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position, 0));
+			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position));
 			wayidStr += entry.value().getIdentifier() + ",";
 		}
 		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
