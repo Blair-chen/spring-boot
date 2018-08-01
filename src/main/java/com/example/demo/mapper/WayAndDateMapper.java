@@ -12,13 +12,13 @@ import com.example.demo.model.WayAndDate;
 @Mapper
 public interface WayAndDateMapper
 {
-	@Select("SELECT * FROM wayanddate where time= #{time}")
+	@Select("SELECT * FROM way_and_date where time= #{time}")
 	List<WayAndDate> findByTime(@Param("time") Date time);
 
-	@Select("SELECT * FROM wayanddate WHERE id = #{id}")
+	@Select("SELECT * FROM way_and_date WHERE id = #{id}")
 	List<WayAndDate> findWayAndDateById(@Param("id") long id);
 
-	@Select("SELECT * FROM wayanddate WHERE wayid = #{id}")
+	@Select("SELECT * FROM way_and_date WHERE wayid = #{id}")
 	List<WayAndDate> findWayAndDateByWayid(@Param("id") long id);
 
 }

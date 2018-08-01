@@ -126,6 +126,7 @@ public class MapServiceImpl implements MapService
 	@Override
 	public List<SpeedVo> findSpeed(final long wayid, final String date)
 	{
+
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		final List<SpeedVo> result = new ArrayList<SpeedVo>();
 		SpeedVo svo = null;

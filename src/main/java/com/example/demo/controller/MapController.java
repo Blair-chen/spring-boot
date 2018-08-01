@@ -64,9 +64,11 @@ public class MapController
 	 *
 	 * @param request
 	 * @return
+	 * @throws Exception
+	 * @throws NumberFormatException
 	 */
 	@RequestMapping(value = "/findSpeed", method = RequestMethod.GET)
-	public List<SpeedVo> findSpeed(final HttpServletRequest request)
+	public List<SpeedVo> findSpeed(final HttpServletRequest request) throws Exception
 	{
 		return this.mapservice.findSpeed(Long.parseLong(request.getParameter("wayid")),
 				request.getParameter("date"));

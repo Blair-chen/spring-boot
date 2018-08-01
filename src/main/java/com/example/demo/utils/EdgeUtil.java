@@ -1,37 +1,31 @@
 package com.example.demo.utils;
 
-import java.util.Hashtable;
 import java.util.Map;
 
+import com.example.demo.StartInitEdge;
 import com.telenav.modules.mapping.graph.Edge;
 
 public class EdgeUtil
 {
-
-	public static Map<Long, Edge> mapZero = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapOne = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapThree = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapFour = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapTwo = new Hashtable<Long, Edge>();
 
 	public static Map<Long, Edge> findListEdge(final int level)
 	{
 		switch (level)
 		{
 			case 0:
-				return EdgeUtil.mapZero;
+				return StartInitEdge.mapZero;
 
 			case 1:
-				return EdgeUtil.mapOne;
+				return StartInitEdge.mapOne;
 
 			case 2:
-				return EdgeUtil.mapTwo;
+				return StartInitEdge.mapTwo;
 
 			case 3:
-				return EdgeUtil.mapThree;
+				return StartInitEdge.mapThree;
 
 			case 4:
-				return EdgeUtil.mapFour;
+				return StartInitEdge.mapFour;
 
 		}
 		return null;
@@ -39,47 +33,27 @@ public class EdgeUtil
 
 	public static Edge getEdge(final long wayId)
 	{
-		if (EdgeUtil.mapZero.containsKey(wayId))
+		if (StartInitEdge.mapZero.containsKey(wayId))
 		{
-			return EdgeUtil.mapZero.get(wayId);
+			return StartInitEdge.mapZero.get(wayId);
 		}
-		else if (EdgeUtil.mapOne.containsKey(wayId))
+		else if (StartInitEdge.mapOne.containsKey(wayId))
 		{
-			return EdgeUtil.mapOne.get(wayId);
+			return StartInitEdge.mapOne.get(wayId);
 		}
-		else if (EdgeUtil.mapTwo.containsKey(wayId))
+		else if (StartInitEdge.mapTwo.containsKey(wayId))
 		{
-			return EdgeUtil.mapTwo.get(wayId);
+			return StartInitEdge.mapTwo.get(wayId);
 		}
-		else if (EdgeUtil.mapThree.containsKey(wayId))
+		else if (StartInitEdge.mapThree.containsKey(wayId))
 		{
-			return EdgeUtil.mapThree.get(wayId);
+			return StartInitEdge.mapThree.get(wayId);
 		}
-		else if (EdgeUtil.mapFour.containsKey(wayId))
+		else if (StartInitEdge.mapFour.containsKey(wayId))
 		{
-			return EdgeUtil.mapFour.get(wayId);
+			return StartInitEdge.mapFour.get(wayId);
 		}
 		return null;
-	}
-
-	public static void initEdgeToMap(final int level, final Edge edge)
-	{
-		switch (level)
-		{
-			case 0:
-				mapZero.put(edge.getIdentifierAsLong(), edge);
-				break;
-			case 1:
-				mapOne.put(edge.getIdentifierAsLong(), edge);
-				break;
-			case 2:
-				mapTwo.put(edge.getIdentifierAsLong(), edge);
-			case 3:
-				mapThree.put(edge.getIdentifierAsLong(), edge);
-			case 4:
-				mapFour.put(edge.getIdentifierAsLong(), edge);
-
-		}
 	}
 
 }
