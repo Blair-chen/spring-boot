@@ -60,10 +60,11 @@ public class DemoApplicationTests
 	public void beanTest()
 	{
 		final Speed s = new Speed();
+		s.setId(12345);
 		s.setWayid(123);
 		s.setSpeed(23);
 		final SpeedVo svo = new SpeedVo();
-		BeanUtil.copyPro(s, svo);
+		BeanUtil.copyBeanNotNull2Bean(s, svo);
 		// BeanUtil.copyPro(s, svo);
 		// final int[] i = new int[] { 0, 1, 2, 4, 5, 7, 20 };
 		// final int t = this.binSearch(i, 0, i.length - 1, 10);

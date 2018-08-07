@@ -7,6 +7,8 @@ public class RoadesResponse
 	private Long wayid;
 	private List<Position> positions;
 	private int flow;
+	private String color;
+	private List<SourceForm> listSource;
 
 	public RoadesResponse(final Long wayid, final List<Position> positions)
 	{
@@ -24,9 +26,29 @@ public class RoadesResponse
 		this.flow = flow;
 	}
 
+	public RoadesResponse(final Long wayid, final List<Position> positions, final String color,
+			final List<SourceForm> listSource)
+	{
+		super();
+		this.wayid = wayid;
+		this.positions = positions;
+		this.color = color;
+		this.listSource = listSource;
+	}
+
+	public String getColor()
+	{
+		return this.color;
+	}
+
 	public int getFlow()
 	{
 		return this.flow;
+	}
+
+	public List<SourceForm> getListSource()
+	{
+		return this.listSource;
 	}
 
 	public List<Position> getPositions()
@@ -39,9 +61,19 @@ public class RoadesResponse
 		return this.wayid;
 	}
 
+	public void setColor(final String color)
+	{
+		this.color = color;
+	}
+
 	public void setFlow(final int flow)
 	{
 		this.flow = flow;
+	}
+
+	public void setListSource(final List<SourceForm> listSource)
+	{
+		this.listSource = listSource;
 	}
 
 	public void setPositions(final List<Position> positions)

@@ -1,16 +1,41 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class WayAndDate
-{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-	private String id;
+@Entity
+public class WayAndDate implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue
+	private long id;
+	@Column(nullable = false)
 	private Date time;
+
 	private String way;
+	@Column(nullable = false)
 	private long wayid;
 
-	public String getId()
+	public WayAndDate()
+	{
+		super();
+	}
+
+	public WayAndDate(final Date time, final String way, final long wayid)
+	{
+		super();
+		this.time = time;
+		this.way = way;
+		this.wayid = wayid;
+	}
+
+	public long getId()
 	{
 		return this.id;
 	}
@@ -30,7 +55,7 @@ public class WayAndDate
 		return this.wayid;
 	}
 
-	public void setId(final String id)
+	public void setId(final long id)
 	{
 		this.id = id;
 	}

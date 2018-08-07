@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.mapper.SpeedMapper;
-import com.example.demo.mapper.WayAndDateMapper;
+import com.example.demo.dao.SpeedDao;
+import com.example.demo.dao.WayAndDateDao;
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.Position;
 import com.example.demo.model.RoadesResponse;
@@ -33,18 +33,18 @@ import com.telenav.modules.mapping.graph.Edge;
 public class MapServiceImpl implements MapService
 {
 	@Autowired
-	private WayAndDateMapper wayAndDateMapper;
+	private WayAndDateDao wayAndDateMapper;
 
 	@Autowired
-	private SpeedMapper speedMapper;
+	private SpeedDao speedMapper;
 
 	final String anzUrl = "http://10.189.103.146:8080/traffic-service/maps/v4/ngx-traffic-ids/json?map_source=here&traffic_source=here&authorized_region=ANZ&type=flow,incident&locale=en&time=2014-02-04T00:56Z";
 
-	public RTree<Edge, Geometry> CreateTree(final int level)
+	public RTree<Edge, Geometry> CreateTree(final Map<Long, Edge> map)
 	{
 		//
 		RTree<Edge, Geometry> tree = RTree.create();
-		final Map<Long, Edge> map = EdgeUtil.findListEdge(level);
+
 		for (final Edge edge : map.values())
 		{
 			tree = tree.add(edge,
@@ -88,13 +88,13 @@ public class MapServiceImpl implements MapService
 	{
 
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-		final RTree<Edge, Geometry> tree = CreateTree(bound.getZoom());
+		final RTree<Edge, Geometry> tree = CreateTree(EdgeUtil.findListEdge(bound.getZoom()));
 		final List<Entry<Edge,
 				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
 						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
 						bound.getNortheast().getLng())).toList().toBlocking().single();
 		System.out.println(list.size());
-		String wayidStr = "";
+		final StringBuffer wayidStr = new StringBuffer();
 		for (final Entry<Edge, Geometry> entry : list)
 		{
 			final List<Location> location = entry.value().getRoadShape().getLocations();
@@ -104,8 +104,9 @@ public class MapServiceImpl implements MapService
 				position.add(
 						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
 			}
-			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position));
-			wayidStr += entry.value().getIdentifier() + ",";
+			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position, 1));
+			wayidStr.append(entry.value().getIdentifier());
+			wayidStr.append(",");
 		}
 		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
 		final String str = HttpUtil.getFlowReport(this.anzUrl,
@@ -130,7 +131,9 @@ public class MapServiceImpl implements MapService
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		final List<SpeedVo> result = new ArrayList<SpeedVo>();
 		SpeedVo svo = null;
-		final List<Speed> list = this.speedMapper.findSpeedByWayidAndDate(wayid, date);
+
+		final List<Speed> list = this.speedMapper.findByWayidAndDateOrderByDtimeAsc(wayid, date);
+		final int size = list.size();
 		for (final Speed s : list)
 		{
 			svo = new SpeedVo();
@@ -145,7 +148,7 @@ public class MapServiceImpl implements MapService
 	@Override
 	public List<String> findWayAndDateById(final long id)
 	{
-		final List<WayAndDate> list = this.wayAndDateMapper.findWayAndDateByWayid(id);
+		final List<WayAndDate> list = this.wayAndDateMapper.findByWayid(id);
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		final List<String> result = new ArrayList<String>();
 		for (final WayAndDate way : list)
@@ -167,6 +170,27 @@ public class MapServiceImpl implements MapService
 			{
 				json = JSONObject.parseObject(obj.toString());
 				map.put(json.getString("traffic_id"), json.getString("traffic_level"));
+			}
+		}
+		return map;
+	}
+
+	public Map<String, Map<String, Object>> Str2TypeTrafficFlow(final String str)
+	{
+		final Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
+		final Map<String, Object> mapitem = new HashMap<String, Object>();
+		final JSONObject jsonObject = JSONObject.parseObject(str);
+		if (jsonObject.containsKey("traffic_flow"))
+		{
+			JSONObject json = null;
+			final List strarr = (List) jsonObject.get("traffic_flow");
+			for (final Object obj : strarr)
+			{
+				mapitem.clear();
+				json = JSONObject.parseObject(obj.toString());
+				mapitem.put("traffic_level", json.getString("traffic_level"));
+				mapitem.put("speed_in_mps", json.getString("speed_in_mps"));
+				map.put(json.getString("traffic_id"), mapitem);
 			}
 		}
 		return map;

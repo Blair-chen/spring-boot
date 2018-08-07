@@ -1,16 +1,50 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Speed
-{
-	private String id;
-	private long wayid;
-	private double speed;
-	private Date dtime;
-	private Date date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-	public Date getDate()
+@Entity
+public class Speed implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
+	}
+
+	@Id
+	@GeneratedValue
+	private long id;
+	@Column(nullable = false)
+	private long wayid;
+	@Column(nullable = false)
+	private double speed;
+	@Column(nullable = false)
+	private Date dtime;
+	@Column(nullable = false)
+	private String date;
+
+	public Speed()
+	{
+		super();
+	}
+
+	public Speed(final long wayid, final double speed, final Date dtime, final String date)
+	{
+		super();
+		this.wayid = wayid;
+		this.speed = speed;
+		this.dtime = dtime;
+		this.date = date;
+	}
+
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -20,7 +54,7 @@ public class Speed
 		return this.dtime;
 	}
 
-	public String getId()
+	public long getId()
 	{
 		return this.id;
 	}
@@ -35,7 +69,7 @@ public class Speed
 		return this.wayid;
 	}
 
-	public void setDate(final Date date)
+	public void setDate(final String date)
 	{
 		this.date = date;
 	}
@@ -45,7 +79,7 @@ public class Speed
 		this.dtime = dtime;
 	}
 
-	public void setId(final String id)
+	public void setId(final long id)
 	{
 		this.id = id;
 	}

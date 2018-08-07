@@ -8,9 +8,46 @@ import java.net.URL;
 
 public class HttpUtil
 {
+	public static String getDtypeFlow(final String type) throws Exception
+	{
+		final String requesturl = "http://traffic.denalicld.cn/traffic-service/maps/v4/ngx-traffic-country/json?map_source=cennavi&country=CN&traffic_source="
+				+ type + "&locale=zh_CN&type=test&time=2015-04-01T00:00Z&congested_flows=true";
+		BufferedReader br = null;
+		try
+		{
+			final URL url = new URL(requesturl);
+
+			final HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
+			httpConnection.connect();
+			final InputStream is = httpConnection.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+			final StringBuffer sb = new StringBuffer();
+			while (br.read() != -1)
+			{
+				sb.append(br.readLine());
+			}
+			final String content = new String(sb);
+			br.close();
+			br = null;
+			return content;
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (br != null)
+			{
+				br.close();
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * get traffic flow
-	 * 
+	 *
 	 * @param requesturl
 	 * @param id
 	 * @return

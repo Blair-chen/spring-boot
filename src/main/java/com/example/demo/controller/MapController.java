@@ -48,15 +48,16 @@ public class MapController
 	@RequestMapping(value = "/findPositions", method = RequestMethod.POST)
 	public Map<String, Object> findposition(@RequestBody final BoundRequest bound) throws Exception
 	{
+		final Map<String, Object> map = new HashMap<String, Object>();
 		if (bound.getZoom() > 1)
 		{
-			final Map<String, Object> map = new HashMap<String, Object>();
+
 			final List<RoadesResponse> list = this.mapservice.findposition(bound);
 			map.put("listWay", list);
-			map.put("bound", bound);
-			return map;
+
 		}
-		return null;
+		map.put("bound", bound);
+		return map;
 	}
 
 	/**
@@ -86,4 +87,5 @@ public class MapController
 	{
 		return this.mapservice.findWayAndDateById(id);
 	}
+
 }

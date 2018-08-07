@@ -61,14 +61,14 @@ public class Test
 	{
 		final Map<Long, Object> map = new HashMap<Long, Object>();
 		final Logger logger = LoggerFactory.newLogger();
-		final File file = new File("D:\\files and word\\NT-ANZ.graph");
+		final File file = new File("D:\\files and word\\NT-CN.graph");
 		final Graph graph = Graph.forGraphResource(file, logger);
 		final List<Edge> list = graph.edges().asList();
-		String str = "";
+		final String str = "";
 		for (final Edge edge : graph.edges().asList())
 		{
 
-			str += edge.getIdentifierAsLong();
+			System.out.println(edge.getIdentifierAsLong());
 
 		}
 		return map;

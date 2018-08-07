@@ -10,3 +10,11 @@ spring:
      username: root
      password: root
      driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+         hbm2dd1:
+           auto: update
+         dialect:  org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true   
+      

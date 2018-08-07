@@ -4,14 +4,19 @@ import java.util.Date;
 
 public class SpeedVo
 {
-	private String id;
+
+	private long id;
+
 	private long wayid;
+
 	private double speed;
+
 	private Date dtime;
-	private Date date;
+
+	private String date;
 	private String dtimeStr;
 
-	public Date getDate()
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -26,7 +31,7 @@ public class SpeedVo
 		return this.dtimeStr;
 	}
 
-	public String getId()
+	public long getId()
 	{
 		return this.id;
 	}
@@ -41,7 +46,7 @@ public class SpeedVo
 		return this.wayid;
 	}
 
-	public void setDate(final Date date)
+	public void setDate(final String date)
 	{
 		this.date = date;
 	}
@@ -56,7 +61,7 @@ public class SpeedVo
 		this.dtimeStr = dtimeStr;
 	}
 
-	public void setId(final String id)
+	public void setId(final long id)
 	{
 		this.id = id;
 	}
@@ -70,4 +75,5 @@ public class SpeedVo
 	{
 		this.wayid = wayid;
 	}
+
 }
