@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.utils.HttpUtil;
 import com.telenav.modules.mapping.graph.Edge;
 import com.telenav.modules.mapping.graph.Graph;
 import com.telenav.tdk.framework.modules.logging.Logger;
@@ -123,7 +124,7 @@ public class Test
 
 	public static void main(final String[] args) throws Exception
 	{
-		final Map<Long, Object> map = initMapEdge();
+		System.out.println(HttpUtil.getDtypeFlow().substring(0, 40));
 
 	}
 

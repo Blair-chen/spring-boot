@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import com.telenav.modules.mapping.graph.Edge;
 import com.telenav.modules.mapping.graph.Graph;
@@ -12,30 +14,35 @@ import com.telenav.tdk.framework.modules.logging.Logger;
 import com.telenav.tdk.framework.modules.logging.LoggerFactory;
 import com.telenav.tdk.framework.utilities.filesystem.File;
 
+@Component
+@Order(value = 2)
 public class StartInitCompareEdge implements CommandLineRunner
 {
-	public static Map<Long, Edge> compareMapZero = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> compareMapOne = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> compareMapTwo = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> compareMapThree = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> compareMapFour = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> comparelevelZero = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> comparelevelOne = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> comparelevelTwo = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> comparelevelThree = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> comparelevelFour = new Hashtable<Long, Edge>();
 
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
 		switch (level)
 		{
 			case 0:
-				compareMapZero.put(edge.getIdentifierAsLong(), edge);
+				comparelevelZero.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 1:
-				compareMapOne.put(edge.getIdentifierAsLong(), edge);
+				comparelevelOne.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 2:
-				compareMapTwo.put(edge.getIdentifierAsLong(), edge);
+				comparelevelTwo.put(edge.getIdentifierAsLong(), edge);
+				break;
 			case 3:
-				compareMapThree.put(edge.getIdentifierAsLong(), edge);
+				comparelevelThree.put(edge.getIdentifierAsLong(), edge);
+				break;
 			case 4:
-				compareMapFour.put(edge.getIdentifierAsLong(), edge);
+				comparelevelFour.put(edge.getIdentifierAsLong(), edge);
+				break;
 
 		}
 	}

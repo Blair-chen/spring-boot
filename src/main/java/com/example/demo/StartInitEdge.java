@@ -23,28 +23,31 @@ import com.telenav.tdk.framework.utilities.filesystem.File;
 @Order(value = 1)
 public class StartInitEdge implements CommandLineRunner
 {
-	public static Map<Long, Edge> mapZero = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapOne = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapThree = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapFour = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> mapTwo = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> levelZero = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> levelOne = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> levelThree = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> levelFour = new Hashtable<Long, Edge>();
+	public static Map<Long, Edge> levelTwo = new Hashtable<Long, Edge>();
 
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
 		switch (level)
 		{
 			case 0:
-				mapZero.put(edge.getIdentifierAsLong(), edge);
+				levelZero.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 1:
-				mapOne.put(edge.getIdentifierAsLong(), edge);
+				levelOne.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 2:
-				mapTwo.put(edge.getIdentifierAsLong(), edge);
+				levelTwo.put(edge.getIdentifierAsLong(), edge);
+				break;
 			case 3:
-				mapThree.put(edge.getIdentifierAsLong(), edge);
+				levelThree.put(edge.getIdentifierAsLong(), edge);
+				break;
 			case 4:
-				mapFour.put(edge.getIdentifierAsLong(), edge);
+				levelFour.put(edge.getIdentifierAsLong(), edge);
+				break;
 
 		}
 	}
@@ -60,6 +63,7 @@ public class StartInitEdge implements CommandLineRunner
 		{
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
+
 	}
 
 }

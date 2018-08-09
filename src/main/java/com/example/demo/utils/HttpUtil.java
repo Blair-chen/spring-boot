@@ -8,10 +8,10 @@ import java.net.URL;
 
 public class HttpUtil
 {
-	public static String getDtypeFlow(final String type) throws Exception
+
+	public static String getDtypeFlow() throws Exception
 	{
-		final String requesturl = "http://traffic.denalicld.cn/traffic-service/maps/v4/ngx-traffic-country/json?map_source=cennavi&country=CN&traffic_source="
-				+ type + "&locale=zh_CN&type=test&time=2015-04-01T00:00Z&congested_flows=true";
+		final String requesturl = "http://172.16.100.56:8080/demo/compare";
 		BufferedReader br = null;
 		try
 		{
@@ -22,9 +22,10 @@ public class HttpUtil
 			final InputStream is = httpConnection.getInputStream();
 			br = new BufferedReader(new InputStreamReader(is, "utf-8"));
 			final StringBuffer sb = new StringBuffer();
-			while (br.read() != -1)
+			String str = null;
+			while ((str = br.readLine()) != null)
 			{
-				sb.append(br.readLine());
+				sb.append(str);
 			}
 			final String content = new String(sb);
 			br.close();
@@ -65,9 +66,10 @@ public class HttpUtil
 			final InputStream is = httpConnection.getInputStream();
 			br = new BufferedReader(new InputStreamReader(is, "utf-8"));
 			final StringBuffer sb = new StringBuffer();
-			while (br.read() != -1)
+			String str = null;
+			while ((str = br.readLine()) != null)
 			{
-				sb.append(br.readLine());
+				sb.append(str);
 			}
 			final String content = new String(sb);
 			br.close();

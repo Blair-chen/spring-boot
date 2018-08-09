@@ -26,6 +26,28 @@ public class MapController
 	private MapService mapservice;
 
 	/**
+	 * Get the road based on tile
+	 *
+	 * @param bound
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/findByTile", method = RequestMethod.POST)
+	public Map<String, Object> findByTile(@RequestBody final BoundRequest bound) throws Exception
+	{
+		final Map<String, Object> map = new HashMap<String, Object>();
+		if (bound.getZoom() > 1)
+		{
+
+			final List<RoadesResponse> list = this.mapservice.findByTile(bound);
+			map.put("listWay", list);
+
+		}
+		map.put("bound", bound);
+		return map;
+	}
+
+	/**
 	 * Get the road segment based on wayid
 	 *
 	 * @param tile
@@ -36,28 +58,6 @@ public class MapController
 	public List<RoadesResponse> findByWayId(@PathVariable final long tile) throws Exception
 	{
 		return this.mapservice.findByWayId(tile);
-	}
-
-	/**
-	 * Get the road based on tile
-	 *
-	 * @param bound
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/findPositions", method = RequestMethod.POST)
-	public Map<String, Object> findposition(@RequestBody final BoundRequest bound) throws Exception
-	{
-		final Map<String, Object> map = new HashMap<String, Object>();
-		if (bound.getZoom() > 1)
-		{
-
-			final List<RoadesResponse> list = this.mapservice.findposition(bound);
-			map.put("listWay", list);
-
-		}
-		map.put("bound", bound);
-		return map;
 	}
 
 	/**

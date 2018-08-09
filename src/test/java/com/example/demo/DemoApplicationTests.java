@@ -2,28 +2,16 @@ package com.example.demo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import java.util.Calendar;
-
-import org.junit.Before;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.example.demo.controller.DemoControlller;
-import com.example.demo.mapper.SpeedMapper;
-import com.example.demo.mapper.WayAndDateMapper;
 import com.example.demo.model.Speed;
 import com.example.demo.model.SpeedVo;
 import com.example.demo.utils.BeanUtil;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class DemoApplicationTests
 {
 
@@ -50,11 +38,6 @@ public class DemoApplicationTests
 	}
 
 	private MockMvc mockMvc;
-	@Autowired
-	private WayAndDateMapper wayAndDateMapper;
-
-	@Autowired
-	private SpeedMapper speedMapper;
 
 	@Test
 	public void beanTest()
@@ -101,25 +84,32 @@ public class DemoApplicationTests
 				.andDo(print());
 	}
 
-	@Before
-	public void setUp() throws Exception
+	public int SpecIndexOfStr(final String str, final char s, final int i, int index)
 	{
-		this.mockMvc = MockMvcBuilders.standaloneSetup(new DemoControlller()).build();
+		if (i > 0)
+		{
+			index += str.indexOf(s);
+			SpecIndexOfStr(str.substring(str.indexOf(s), str.length()), s, i - 1, index);
+		}
+		else
+		{
+			return index;
+		}
+		return 0;
+
 	}
 
 	@Test
 	public void test()
 	{
 
-		// nowTime.add(field, amount);
-		for (int i = 0; i < 500; i++)
-		{
-			final Calendar nowTime = Calendar.getInstance();
-			nowTime.add(Calendar.MINUTE, i);
+		final int[] i = { 12, 23, 45 };
+		final String str = i.toString();
+		final String s = "12,34,56";
 
-			this.speedMapper.insert(i + "10", 1143235428, 23, nowTime.getTime(), "2018-07-12");
-		}
-
+		System.out.println(StringUtils.ordinalIndexOf(s, ",", 2));
+		System.out.println(s.substring(0, 5));
+		System.out.println(s.substring(5, s.length() - 1));
 		// System.out.println(this.speedMapper.findSpeedByWayidAndDate(1143235428, "2018-07-12"));
 	}
 }

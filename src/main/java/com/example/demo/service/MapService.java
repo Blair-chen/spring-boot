@@ -9,9 +9,9 @@ import com.example.demo.model.SpeedVo;
 public interface MapService
 {
 
-	public List<RoadesResponse> findByWayId(long wayId) throws Exception;
+	public List<RoadesResponse> findByTile(BoundRequest bound) throws Exception;
 
-	public List<RoadesResponse> findposition(BoundRequest bound) throws Exception;
+	public List<RoadesResponse> findByWayId(long wayId) throws Exception;
 
 	public List<SpeedVo> findSpeed(long wayid, String date);
 

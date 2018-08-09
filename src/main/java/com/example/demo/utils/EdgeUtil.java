@@ -4,29 +4,47 @@ import java.util.Map;
 
 import com.example.demo.StartInitCompareEdge;
 import com.example.demo.StartInitEdge;
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.graph.Edge;
 
 public class EdgeUtil
 {
+	public static RTree<Edge, Geometry> CreateTree(final Map<Long, Edge> map)
+	{
+		//
+		RTree<Edge, Geometry> tree = RTree.create();
+
+		for (final Edge edge : map.values())
+		{
+			tree = tree.add(edge,
+					Geometries.rectangle(edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+							edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+							edge.bounds().getTopRight().getLatitude().asDegrees(),
+							edge.bounds().getTopRight().getLongitude().asDegrees()));
+		}
+		return tree;
+	}
 
 	public static Map<Long, Edge> findCompareEdge(final int level)
 	{
 		switch (level)
 		{
 			case 0:
-				return StartInitCompareEdge.compareMapZero;
+				return StartInitCompareEdge.comparelevelZero;
 
 			case 1:
-				return StartInitCompareEdge.compareMapOne;
+				return StartInitCompareEdge.comparelevelOne;
 
 			case 2:
-				return StartInitCompareEdge.compareMapTwo;
+				return StartInitCompareEdge.comparelevelTwo;
 
 			case 3:
-				return StartInitCompareEdge.compareMapThree;
+				return StartInitCompareEdge.comparelevelThree;
 
 			case 4:
-				return StartInitCompareEdge.compareMapFour;
+				return StartInitCompareEdge.comparelevelFour;
 
 		}
 		return null;
@@ -37,19 +55,19 @@ public class EdgeUtil
 		switch (level)
 		{
 			case 0:
-				return StartInitEdge.mapZero;
+				return StartInitEdge.levelZero;
 
 			case 1:
-				return StartInitEdge.mapOne;
+				return StartInitEdge.levelOne;
 
 			case 2:
-				return StartInitEdge.mapTwo;
+				return StartInitEdge.levelTwo;
 
 			case 3:
-				return StartInitEdge.mapThree;
+				return StartInitEdge.levelThree;
 
 			case 4:
-				return StartInitEdge.mapFour;
+				return StartInitEdge.levelFour;
 
 		}
 		return null;
@@ -57,25 +75,25 @@ public class EdgeUtil
 
 	public static Edge getEdge(final long wayId)
 	{
-		if (StartInitEdge.mapZero.containsKey(wayId))
+		if (StartInitEdge.levelZero.containsKey(wayId))
 		{
-			return StartInitEdge.mapZero.get(wayId);
+			return StartInitEdge.levelZero.get(wayId);
 		}
-		else if (StartInitEdge.mapOne.containsKey(wayId))
+		else if (StartInitEdge.levelOne.containsKey(wayId))
 		{
-			return StartInitEdge.mapOne.get(wayId);
+			return StartInitEdge.levelOne.get(wayId);
 		}
-		else if (StartInitEdge.mapTwo.containsKey(wayId))
+		else if (StartInitEdge.levelTwo.containsKey(wayId))
 		{
-			return StartInitEdge.mapTwo.get(wayId);
+			return StartInitEdge.levelTwo.get(wayId);
 		}
-		else if (StartInitEdge.mapThree.containsKey(wayId))
+		else if (StartInitEdge.levelThree.containsKey(wayId))
 		{
-			return StartInitEdge.mapThree.get(wayId);
+			return StartInitEdge.levelThree.get(wayId);
 		}
-		else if (StartInitEdge.mapFour.containsKey(wayId))
+		else if (StartInitEdge.levelFour.containsKey(wayId))
 		{
-			return StartInitEdge.mapFour.get(wayId);
+			return StartInitEdge.levelFour.get(wayId);
 		}
 		return null;
 	}

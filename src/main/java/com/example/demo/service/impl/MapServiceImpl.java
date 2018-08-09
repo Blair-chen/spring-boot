@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,20 +41,58 @@ public class MapServiceImpl implements MapService
 
 	final String anzUrl = "http://10.189.103.146:8080/traffic-service/maps/v4/ngx-traffic-ids/json?map_source=here&traffic_source=here&authorized_region=ANZ&type=flow,incident&locale=en&time=2014-02-04T00:56Z";
 
-	public RTree<Edge, Geometry> CreateTree(final Map<Long, Edge> map)
+	@Override
+	public List<RoadesResponse> findByTile(final BoundRequest bound) throws Exception
 	{
-		//
-		RTree<Edge, Geometry> tree = RTree.create();
 
-		for (final Edge edge : map.values())
+		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
+		final RTree<Edge,
+				Geometry> tree = EdgeUtil.CreateTree(EdgeUtil.findListEdge(bound.getZoom()));
+		final List<Entry<Edge,
+				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
+						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
+						bound.getNortheast().getLng())).toList().toBlocking().single();
+		System.out.println(list.size());
+		final StringBuffer wayidStr = new StringBuffer();
+		for (final Entry<Edge, Geometry> entry : list)
 		{
-			tree = tree.add(edge,
-					Geometries.rectangle(edge.bounds().getBottomLeft().getLatitude().asDegrees(),
-							edge.bounds().getBottomLeft().getLongitude().asDegrees(),
-							edge.bounds().getTopRight().getLatitude().asDegrees(),
-							edge.bounds().getTopRight().getLongitude().asDegrees()));
+			final List<Location> location = entry.value().getRoadShape().getLocations();
+			final List<Position> position = new ArrayList<Position>();
+			for (final Location lo : location)
+			{
+				position.add(
+						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
+			}
+			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position));
+			wayidStr.append(entry.value().getIdentifier());
+			wayidStr.append(",");
 		}
-		return tree;
+		final int i = StringUtils.ordinalIndexOf(wayidStr.toString(), ",", 4000);
+		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
+
+		Map<String, String> map = new HashMap<String, String>();
+		if (i != -1)
+		{
+			map = Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl, wayidStr.substring(0, i)));
+			map.putAll(Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
+					wayidStr.substring(i + 1, wayidStr.length() - 1))));
+		}
+		else
+		{
+			map = Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
+					wayidStr.substring(0, wayidStr.length() - 1)));
+		}
+
+		for (final RoadesResponse res : result)
+		{
+			if (map.containsKey(res.getWayid().toString()))
+			{
+				res.setFlow(Integer.parseInt(map.get(res.getWayid().toString())));
+				results.add(res);
+			}
+		}
+		return results;
+
 	}
 
 	@Override
@@ -81,47 +120,6 @@ public class MapServiceImpl implements MapService
 			return null;
 		}
 		return null;
-	}
-
-	@Override
-	public List<RoadesResponse> findposition(final BoundRequest bound) throws Exception
-	{
-
-		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-		final RTree<Edge, Geometry> tree = CreateTree(EdgeUtil.findListEdge(bound.getZoom()));
-		final List<Entry<Edge,
-				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
-						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
-						bound.getNortheast().getLng())).toList().toBlocking().single();
-		System.out.println(list.size());
-		final StringBuffer wayidStr = new StringBuffer();
-		for (final Entry<Edge, Geometry> entry : list)
-		{
-			final List<Location> location = entry.value().getRoadShape().getLocations();
-			final List<Position> position = new ArrayList<Position>();
-			for (final Location lo : location)
-			{
-				position.add(
-						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
-			}
-			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position, 1));
-			wayidStr.append(entry.value().getIdentifier());
-			wayidStr.append(",");
-		}
-		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
-		final String str = HttpUtil.getFlowReport(this.anzUrl,
-				wayidStr.substring(0, wayidStr.length() - 1));
-		final Map<String, String> map = Str2TrafficFlow(str);
-		for (final RoadesResponse res : result)
-		{
-			if (map.containsKey(res.getWayid().toString()))
-			{
-				res.setFlow(Integer.parseInt(map.get(res.getWayid().toString())));
-				results.add(res);
-			}
-		}
-		return results;
-
 	}
 
 	@Override
@@ -161,7 +159,7 @@ public class MapServiceImpl implements MapService
 	public Map<String, String> Str2TrafficFlow(final String str)
 	{
 		final Map<String, String> map = new HashMap<String, String>();
-		final JSONObject jsonObject = JSONObject.parseObject("{" + str);
+		final JSONObject jsonObject = JSONObject.parseObject(str);
 		if (jsonObject.containsKey("traffic_flow"))
 		{
 			JSONObject json = null;
@@ -170,27 +168,6 @@ public class MapServiceImpl implements MapService
 			{
 				json = JSONObject.parseObject(obj.toString());
 				map.put(json.getString("traffic_id"), json.getString("traffic_level"));
-			}
-		}
-		return map;
-	}
-
-	public Map<String, Map<String, Object>> Str2TypeTrafficFlow(final String str)
-	{
-		final Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
-		final Map<String, Object> mapitem = new HashMap<String, Object>();
-		final JSONObject jsonObject = JSONObject.parseObject(str);
-		if (jsonObject.containsKey("traffic_flow"))
-		{
-			JSONObject json = null;
-			final List strarr = (List) jsonObject.get("traffic_flow");
-			for (final Object obj : strarr)
-			{
-				mapitem.clear();
-				json = JSONObject.parseObject(obj.toString());
-				mapitem.put("traffic_level", json.getString("traffic_level"));
-				mapitem.put("speed_in_mps", json.getString("speed_in_mps"));
-				map.put(json.getString("traffic_id"), mapitem);
 			}
 		}
 		return map;

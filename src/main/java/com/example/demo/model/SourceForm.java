@@ -8,6 +8,13 @@ public class SourceForm
 	private double speed;
 	private int level;
 
+	public SourceForm(final String type, final int level)
+	{
+		super();
+		this.type = type;
+		this.level = level;
+	}
+
 	public SourceForm(final String type, final long id, final String reportTime, final double speed,
 			final int level)
 	{
