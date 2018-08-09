@@ -109,14 +109,6 @@ public class DemoApplicationTests
 		final Map<String, String> map = new HashMap<String, String>();
 		map.containsKey("id");
 		System.out.println(str.length());
-		// final int[] i = { 12, 23, 45 };
-		// final String str = i.toString();
-		// final String s = "12,34,56";
-		//
-		// System.out.println(StringUtils.ordinalIndexOf(s, ",", 2));
-		// System.out.println(s.substring(0, 5));
-		// System.out.println(s.substring(5, s.length() - 1));
-		// // System.out.println(this.speedMapper.findSpeedByWayidAndDate(1143235428,
-		// "2018-07-12"));
+
 	}
 }
