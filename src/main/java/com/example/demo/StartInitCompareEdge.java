@@ -1,13 +1,14 @@
 package com.example.demo;
 
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.graph.Edge;
 import com.telenav.modules.mapping.graph.Graph;
 import com.telenav.tdk.framework.modules.logging.Logger;
@@ -18,30 +19,56 @@ import com.telenav.tdk.framework.utilities.filesystem.File;
 @Order(value = 2)
 public class StartInitCompareEdge implements CommandLineRunner
 {
-	public static Map<Long, Edge> comparelevelZero = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> comparelevelOne = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> comparelevelTwo = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> comparelevelThree = new Hashtable<Long, Edge>();
-	public static Map<Long, Edge> comparelevelFour = new Hashtable<Long, Edge>();
+	public static RTree<Edge, Geometry> compareLevelZerotree = RTree.create();
+	public static RTree<Edge, Geometry> compareLevelOnetree = RTree.create();
+	public static RTree<Edge, Geometry> compareLevelThreetree = RTree.create();
+	public static RTree<Edge, Geometry> compareLevelFourtree = RTree.create();
+	public static RTree<Edge, Geometry> compareLevelTwotree = RTree.create();
 
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
 		switch (level)
 		{
 			case 0:
-				comparelevelZero.put(edge.getIdentifierAsLong(), edge);
+				compareLevelZerotree = compareLevelZerotree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
+
 				break;
 			case 1:
-				comparelevelOne.put(edge.getIdentifierAsLong(), edge);
+				compareLevelOnetree = compareLevelOnetree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				break;
 			case 2:
-				comparelevelTwo.put(edge.getIdentifierAsLong(), edge);
+				compareLevelTwotree = compareLevelTwotree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				break;
 			case 3:
-				comparelevelThree.put(edge.getIdentifierAsLong(), edge);
+				compareLevelThreetree = compareLevelThreetree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				break;
 			case 4:
-				comparelevelFour.put(edge.getIdentifierAsLong(), edge);
+				compareLevelFourtree = compareLevelFourtree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				break;
 
 		}
@@ -58,7 +85,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 		{
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
-
+		System.out.println("compare 的五棵树创建好啦");
 	}
 
 }

@@ -8,6 +8,11 @@ public class Position
 	private double lat;
 	private double lng;
 
+	public Position()
+	{
+		super();
+	}
+
 	@JsonCreator
 	public Position(@JsonProperty("lat") final double lat, @JsonProperty("lng") final double lng)
 	{

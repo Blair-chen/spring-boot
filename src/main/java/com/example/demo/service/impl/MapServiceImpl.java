@@ -33,21 +33,20 @@ import com.telenav.modules.mapping.graph.Edge;
 @Service
 public class MapServiceImpl implements MapService
 {
+	final String anzUrl = "http://10.189.103.146:8080/traffic-service/maps/v4/ngx-traffic-ids/json?map_source=here&traffic_source=here&authorized_region=ANZ&type=flow,incident&locale=en&time=2014-02-04T00:56Z";
+
 	@Autowired
 	private WayAndDateDao wayAndDateMapper;
 
 	@Autowired
 	private SpeedDao speedMapper;
 
-	final String anzUrl = "http://10.189.103.146:8080/traffic-service/maps/v4/ngx-traffic-ids/json?map_source=here&traffic_source=here&authorized_region=ANZ&type=flow,incident&locale=en&time=2014-02-04T00:56Z";
-
 	@Override
 	public List<RoadesResponse> findByTile(final BoundRequest bound) throws Exception
 	{
 
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-		final RTree<Edge,
-				Geometry> tree = EdgeUtil.CreateTree(EdgeUtil.findListEdge(bound.getZoom()));
+		final RTree<Edge, Geometry> tree = EdgeUtil.findListEdge(bound.getZoom());
 		final List<Entry<Edge,
 				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
 						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
@@ -67,21 +66,11 @@ public class MapServiceImpl implements MapService
 			wayidStr.append(entry.value().getIdentifier());
 			wayidStr.append(",");
 		}
-		final int i = StringUtils.ordinalIndexOf(wayidStr.toString(), ",", 4000);
+		final Map<String,
+				String> map = wayidStr.length() > 0
+						? getTrafficFlowToMap(wayidStr.substring(0, wayidStr.length() - 1))
+						: new HashMap<String, String>();
 		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
-
-		Map<String, String> map = new HashMap<String, String>();
-		if (i != -1)
-		{
-			map = Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl, wayidStr.substring(0, i)));
-			map.putAll(Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
-					wayidStr.substring(i + 1, wayidStr.length() - 1))));
-		}
-		else
-		{
-			map = Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
-					wayidStr.substring(0, wayidStr.length() - 1)));
-		}
 
 		for (final RoadesResponse res : result)
 		{
@@ -156,6 +145,55 @@ public class MapServiceImpl implements MapService
 		return result;
 	}
 
+	/**
+	 * Truncate String
+	 *
+	 * @param str
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getTrafficFlowToMap(final String str) throws Exception
+	{
+		Map<String, String> map = new HashMap<String, String>();
+		final List<Integer> indexList = new ArrayList<Integer>();
+		int count = 1;
+		int i = -1;
+		do
+		{
+			i = StringUtils.ordinalIndexOf(str, ",", 4000 * count);
+			if (i != -1)
+			{
+				indexList.add(i);
+				count++;
+			}
+		}
+		while ((i != -1));
+		if (indexList.size() > 1)
+		{
+			map = Str2TrafficFlow(
+					HttpUtil.getFlowReport(this.anzUrl, str.substring(0, indexList.get(0))));
+			for (int j = 0; j < indexList.size() - 1; j++)
+			{
+				map.putAll(Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
+						str.substring(indexList.get(j) + 1, indexList.get(j + 1)))));
+			}
+			map.putAll(Str2TrafficFlow(HttpUtil.getFlowReport(this.anzUrl,
+					str.substring(indexList.get(indexList.size() - 1) + 1, str.length()))));
+		}
+		else
+		{
+			map = Str2TrafficFlow(
+					HttpUtil.getFlowReport(this.anzUrl, str.substring(0, str.length())));
+		}
+		return map;
+	}
+
+	/**
+	 * Parsing string
+	 *
+	 * @param str
+	 * @return
+	 */
 	public Map<String, String> Str2TrafficFlow(final String str)
 	{
 		final Map<String, String> map = new HashMap<String, String>();

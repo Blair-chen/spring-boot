@@ -2,7 +2,9 @@ package com.example.demo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -100,16 +102,21 @@ public class DemoApplicationTests
 	}
 
 	@Test
-	public void test()
+	public void test() throws Exception
 	{
 
-		final int[] i = { 12, 23, 45 };
-		final String str = i.toString();
-		final String s = "12,34,56";
-
-		System.out.println(StringUtils.ordinalIndexOf(s, ",", 2));
-		System.out.println(s.substring(0, 5));
-		System.out.println(s.substring(5, s.length() - 1));
-		// System.out.println(this.speedMapper.findSpeedByWayidAndDate(1143235428, "2018-07-12"));
+		final String str = "";
+		final Map<String, String> map = new HashMap<String, String>();
+		map.containsKey("id");
+		System.out.println(str.length());
+		// final int[] i = { 12, 23, 45 };
+		// final String str = i.toString();
+		// final String s = "12,34,56";
+		//
+		// System.out.println(StringUtils.ordinalIndexOf(s, ",", 2));
+		// System.out.println(s.substring(0, 5));
+		// System.out.println(s.substring(5, s.length() - 1));
+		// // System.out.println(this.speedMapper.findSpeedByWayidAndDate(1143235428,
+		// "2018-07-12"));
 	}
 }

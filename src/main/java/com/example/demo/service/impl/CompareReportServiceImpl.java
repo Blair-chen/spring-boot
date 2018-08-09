@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import com.example.demo.service.CompareReportService;
 import com.example.demo.utils.EdgeUtil;
 import com.example.demo.utils.HttpUtil;
 import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.geography.Location;
@@ -33,14 +33,14 @@ public class CompareReportServiceImpl implements CompareReportService
 		final CompareReport comapreReport = new CompareReport();
 		comapreReport.setBound(bound);
 		System.out.println(EdgeUtil.findCompareEdge(bound.getZoom()).size());
-		final RTree<Edge,
-				Geometry> tree = EdgeUtil.CreateTree(EdgeUtil.findCompareEdge(bound.getZoom()));
+
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
 
-		final List<Entry<Edge,
-				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
+		final List<Entry<Edge, Geometry>> list = EdgeUtil.findCompareEdge(bound.getZoom())
+				.search(Geometries.rectangle(bound.getSourthwest().getLat(),
 						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
-						bound.getNortheast().getLng())).toList().toBlocking().single();
+						bound.getNortheast().getLng()))
+				.toList().toBlocking().single();
 		final String str = HttpUtil.getDtypeFlow();
 		final Map<String, Map<String, Object>> map = str2Json(str, comapreReport);
 		for (final Entry<Edge, Geometry> entry : list)
@@ -75,6 +75,41 @@ public class CompareReportServiceImpl implements CompareReportService
 		return comapreReport;
 	}
 
+	/**
+	 * Assign the value of jsonObject to Object by reflection
+	 *
+	 * @param target
+	 * @param jsonObject
+	 */
+	public void Json2Object(final Object target, final JSONObject jsonObject)
+	{
+		final Field[] fields = target.getClass().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++)
+		{
+			if (jsonObject.containsKey(fields[i].getName()))
+			{
+				try
+				{
+					fields[i].setAccessible(true);
+					fields[i].set(target, jsonObject.get(fields[i].getName()));
+				}
+				catch (IllegalArgumentException | IllegalAccessException e)
+				{
+
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * String to map {auto:{id:xx,level:hh},pam:{id:xx,level:mm}} ----> {xx:{auto:hh,pam:mm}}
+	 * 
+	 * @param str
+	 * @param comapreReport
+	 * @return
+	 */
 	public Map<String, Map<String, Object>> str2Json(final String str,
 			final CompareReport comapreReport)
 	{
@@ -82,39 +117,7 @@ public class CompareReportServiceImpl implements CompareReportService
 		final Map<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 
 		final JSONObject jsonObject = JSONObject.parseObject(str);
-		if (jsonObject.containsKey("palmgoCount"))
-		{
-			comapreReport.setPalmgoCount(Integer.parseInt(jsonObject.getString("palmgoCount")));
-
-		}
-		if (jsonObject.containsKey("autonaviCount"))
-		{
-			comapreReport.setAutonaviCount(Integer.parseInt(jsonObject.getString("autonaviCount")));
-		}
-		if (jsonObject.containsKey("inPalmgoButNotInAutoNavi"))
-		{
-			comapreReport.setInPalmgoButNotInAutoNavi(
-					Integer.parseInt(jsonObject.getString("inPalmgoButNotInAutoNavi")));
-		}
-		if (jsonObject.containsKey("inAutoNaviButNotInPalmgo"))
-		{
-			comapreReport.setInAutoNaviButNotInPalmgo(
-					Integer.parseInt(jsonObject.getString("inAutoNaviButNotInPalmgo")));
-		}
-		if (jsonObject.containsKey("same"))
-		{
-			comapreReport.setSame(Integer.parseInt(jsonObject.getString("same")));
-		}
-		if (jsonObject.containsKey("differentSpeedCount"))
-		{
-			comapreReport.setDifferentSpeedCount(
-					Integer.parseInt(jsonObject.getString("differentSpeedCount")));
-		}
-		if (jsonObject.containsKey("differentLevelCount"))
-		{
-			comapreReport.setDifferentLevelCount(
-					Integer.parseInt(jsonObject.getString("differentLevelCount")));
-		}
+		Json2Object(comapreReport, jsonObject);
 		if (jsonObject.containsKey("differentLevel"))
 		{
 			JSONObject json = null;

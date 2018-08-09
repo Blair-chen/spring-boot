@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
+import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.graph.Edge;
 import com.telenav.modules.mapping.graph.Graph;
 import com.telenav.tdk.framework.modules.logging.Logger;
@@ -29,23 +32,59 @@ public class StartInitEdge implements CommandLineRunner
 	public static Map<Long, Edge> levelFour = new Hashtable<Long, Edge>();
 	public static Map<Long, Edge> levelTwo = new Hashtable<Long, Edge>();
 
+	public static RTree<Edge, Geometry> levelZerotree = RTree.create();
+	public static RTree<Edge, Geometry> levelOnetree = RTree.create();
+	public static RTree<Edge, Geometry> levelThreetree = RTree.create();
+	public static RTree<Edge, Geometry> levelFourtree = RTree.create();
+	public static RTree<Edge, Geometry> levelTwotree = RTree.create();
+
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
 		switch (level)
 		{
 			case 0:
+				levelZerotree = levelZerotree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				levelZero.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 1:
+				levelZerotree = levelZerotree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				levelOne.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 2:
+				levelTwotree = levelTwotree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				levelTwo.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 3:
+				levelThreetree = levelThreetree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				levelThree.put(edge.getIdentifierAsLong(), edge);
 				break;
 			case 4:
+				levelFourtree = levelFourtree.add(edge,
+						Geometries.rectangle(
+								edge.bounds().getBottomLeft().getLatitude().asDegrees(),
+								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
+								edge.bounds().getTopRight().getLatitude().asDegrees(),
+								edge.bounds().getTopRight().getLongitude().asDegrees()));
 				levelFour.put(edge.getIdentifierAsLong(), edge);
 				break;
 
@@ -63,6 +102,7 @@ public class StartInitEdge implements CommandLineRunner
 		{
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
+		System.out.println("search 的五棵树创建好啦");
 
 	}
 

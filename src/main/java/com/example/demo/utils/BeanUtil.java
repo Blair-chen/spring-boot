@@ -3,11 +3,7 @@ package com.example.demo.utils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -99,35 +95,4 @@ public class BeanUtil
 
 	}
 
-	public static List<String> getTime(final String s) throws ParseException
-	{
-		final List<String> list = new ArrayList<String>();
-		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String str;
-		for (int i = 1; i <= 283; i++)
-		{
-			str = s;
-			final int hour = (i * 5) / 60;
-			final int minute = (i * 5) % 60;
-			if (hour < 10)
-			{
-				str += " 0" + hour + ":";
-			}
-			else
-			{
-				str += " " + hour + ":";
-			}
-			if (minute < 10)
-			{
-				str += "0" + minute + ":00";
-			}
-			else
-			{
-				str += minute + ":00";
-			}
-			list.add(format.format(sdf.parse(str)));
-		}
-		return list;
-	}
 }
