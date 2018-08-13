@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -22,8 +20,7 @@ import com.telenav.tdk.framework.utilities.filesystem.File;
  *
  * @author qiongchen
  */
-@Component
-@Order(value = 1)
+
 public class StartInitEdge implements CommandLineRunner
 {
 	public static Map<Long, Edge> levelZero = new Hashtable<Long, Edge>();

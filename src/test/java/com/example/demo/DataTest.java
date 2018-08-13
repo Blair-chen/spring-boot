@@ -7,7 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -115,4 +118,18 @@ public class DataTest
 		}
 		return str;
 	}
+
+	@Test
+	public void orand()
+	{
+		final List list = new ArrayList<>();
+		list.add("123");
+		list.add("456");
+		list.add("789");
+		System.out.println(list.toString());
+		final String str = "456";
+		System.out.println(list.toString().contains(", " + str + ","));
+
+	}
+
 }

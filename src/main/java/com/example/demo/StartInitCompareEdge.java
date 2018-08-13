@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -24,6 +26,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 	public static RTree<Edge, Geometry> compareLevelThreetree = RTree.create();
 	public static RTree<Edge, Geometry> compareLevelFourtree = RTree.create();
 	public static RTree<Edge, Geometry> compareLevelTwotree = RTree.create();
+	public static Map<String, Edge> compareMapEdge = new HashMap<String, Edge>();
 
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
@@ -81,8 +84,10 @@ public class StartInitCompareEdge implements CommandLineRunner
 		final File file = new File("D:\\files and word\\NT-CN.graph");
 		final Graph graph = Graph.forGraphResource(file, logger);
 		final List<Edge> list = graph.edges().asList();
+		System.out.println(list.size());
 		for (int i = 0; i < list.size(); i++)
 		{
+			compareMapEdge.put(list.get(i).getIdentifier().toString(), list.get(i));
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
 		System.out.println("compare 的五棵树创建好啦");

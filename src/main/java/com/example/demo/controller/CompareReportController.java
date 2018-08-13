@@ -16,10 +16,24 @@ public class CompareReportController
 	@Autowired
 	CompareReportService compareReportService;
 
+	@RequestMapping(value = "/getCompareReport", method = RequestMethod.GET)
+	public CompareReport getCompareReport()
+	{
+		return this.compareReportService.getCompareReport();
+	}
+
 	@RequestMapping(value = "/getCompareRepotrByTile", method = RequestMethod.POST)
 	public CompareReport getCompareRepotrByTile(@RequestBody final BoundRequest bound)
 			throws Exception
 	{
 		return this.compareReportService.getReport(bound);
+	}
+
+	@RequestMapping(value = "/getDifferentRoadeByTile", method = RequestMethod.POST)
+	public CompareReport getDifferentRoadeByTile(@RequestBody final BoundRequest bound)
+	{
+		final CompareReport c = this.compareReportService.getDifferentRoade(bound);
+		System.out.println(c);
+		return c;
 	}
 }

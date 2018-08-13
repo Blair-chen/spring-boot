@@ -4,15 +4,17 @@ import java.util.List;
 
 public class CompareReport
 {
-	private int palmgoCount;
+	private int palmgoTotalCount;
+	private int palmgoCurrentCount;
 	private int autonaviCount;
-	private int inPalmgoButNotInAutoNavi;
-	private int inAutoNaviButNotInPalmgo;
-	private int same;
+	private int inPalmgoButNotInAutoNaviCount;
+	private int inAutoNaviButNotInPalmgoCount;
+	private int sameCount;
 	private int differentSpeedCount;
 	private int differentLevelCount;
 	private List<RoadesResponse> roadeslist;
 	private BoundRequest bound;
+	private List<FunctionClassCount> functionClasslist;
 
 	public int getAutonaviCount()
 	{
@@ -34,19 +36,29 @@ public class CompareReport
 		return this.differentSpeedCount;
 	}
 
-	public int getInAutoNaviButNotInPalmgo()
+	public List<FunctionClassCount> getFunctionClasslist()
 	{
-		return this.inAutoNaviButNotInPalmgo;
+		return this.functionClasslist;
 	}
 
-	public int getInPalmgoButNotInAutoNavi()
+	public int getInAutoNaviButNotInPalmgoCount()
 	{
-		return this.inPalmgoButNotInAutoNavi;
+		return this.inAutoNaviButNotInPalmgoCount;
 	}
 
-	public int getPalmgoCount()
+	public int getInPalmgoButNotInAutoNaviCount()
 	{
-		return this.palmgoCount;
+		return this.inPalmgoButNotInAutoNaviCount;
+	}
+
+	public int getPalmgoCurrentCount()
+	{
+		return this.palmgoCurrentCount;
+	}
+
+	public int getPalmgoTotalCount()
+	{
+		return this.palmgoTotalCount;
 	}
 
 	public List<RoadesResponse> getRoadeslist()
@@ -54,9 +66,9 @@ public class CompareReport
 		return this.roadeslist;
 	}
 
-	public int getSame()
+	public int getSameCount()
 	{
-		return this.same;
+		return this.sameCount;
 	}
 
 	public void setAutonaviCount(final int autonaviCount)
@@ -79,19 +91,29 @@ public class CompareReport
 		this.differentSpeedCount = differentSpeedCount;
 	}
 
-	public void setInAutoNaviButNotInPalmgo(final int inAutoNaviButNotInPalmgo)
+	public void setFunctionClasslist(final List<FunctionClassCount> functionClasslist)
 	{
-		this.inAutoNaviButNotInPalmgo = inAutoNaviButNotInPalmgo;
+		this.functionClasslist = functionClasslist;
 	}
 
-	public void setInPalmgoButNotInAutoNavi(final int inPalmgoButNotInAutoNavi)
+	public void setInAutoNaviButNotInPalmgoCount(final int inAutoNaviButNotInPalmgoCount)
 	{
-		this.inPalmgoButNotInAutoNavi = inPalmgoButNotInAutoNavi;
+		this.inAutoNaviButNotInPalmgoCount = inAutoNaviButNotInPalmgoCount;
 	}
 
-	public void setPalmgoCount(final int palmgoCount)
+	public void setInPalmgoButNotInAutoNaviCount(final int inPalmgoButNotInAutoNaviCount)
 	{
-		this.palmgoCount = palmgoCount;
+		this.inPalmgoButNotInAutoNaviCount = inPalmgoButNotInAutoNaviCount;
+	}
+
+	public void setPalmgoCurrentCount(final int palmgoCurrentCount)
+	{
+		this.palmgoCurrentCount = palmgoCurrentCount;
+	}
+
+	public void setPalmgoTotalCount(final int palmgoTotalCount)
+	{
+		this.palmgoTotalCount = palmgoTotalCount;
 	}
 
 	public void setRoadeslist(final List<RoadesResponse> roadeslist)
@@ -99,9 +121,9 @@ public class CompareReport
 		this.roadeslist = roadeslist;
 	}
 
-	public void setSame(final int same)
+	public void setSameCount(final int sameCount)
 	{
-		this.same = same;
+		this.sameCount = sameCount;
 	}
 
 }
