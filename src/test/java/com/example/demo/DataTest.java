@@ -7,12 +7,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.utils.HttpUtil;
 
 public class DataTest
 {
@@ -120,15 +120,13 @@ public class DataTest
 	}
 
 	@Test
-	public void orand()
+	public void orand() throws Exception
 	{
-		final List list = new ArrayList<>();
-		list.add("123");
-		list.add("456");
-		list.add("789");
-		System.out.println(list.toString());
-		final String str = "456";
-		System.out.println(list.toString().contains(", " + str + ","));
+		for (int i = 0; i < 100; i++)
+		{
+			HttpUtil.getDtypeFlow();
+		}
+		System.out.println("greg");
 
 	}
 

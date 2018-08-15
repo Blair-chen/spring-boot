@@ -3,10 +3,16 @@ package com.example.demo.utils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.StartInitCompareEdge;
+import com.example.demo.model.FunctionClassCount;
 
 public class BeanUtil
 {
@@ -95,4 +101,97 @@ public class BeanUtil
 
 	}
 
+	public static FunctionClassCount FunctionClassCount(final String str)
+	{
+		int functionClass;
+		final FunctionClassCount functionClassCount = new FunctionClassCount(0, 0, 0, 0, 0);
+		final String[] strAutoArr = str.substring(1, str.length() - 1).split(",");
+		System.out.println(StartInitCompareEdge.compareMapEdge.size());
+
+		for (int i = 0; i < strAutoArr.length; i++)
+		{
+			if (StartInitCompareEdge.compareMapEdge.containsKey(strAutoArr[i]))
+			{
+				functionClass = StartInitCompareEdge.compareMapEdge.get(strAutoArr[i]);
+
+				switch (functionClass)
+				{
+					case 0:
+
+						functionClassCount.setFunctionClassZero(
+								functionClassCount.getFunctionClassZero() + 1);
+						break;
+					case 1:
+						functionClassCount
+								.setFunctionClassOne(functionClassCount.getFunctionClassOne() + 1);
+						break;
+					case 2:
+						functionClassCount
+								.setFunctionClassTwo(functionClassCount.getFunctionClassTwo() + 1);
+						break;
+					case 3:
+						functionClassCount.setFunctionClassThree(
+								functionClassCount.getFunctionClassThree() + 1);
+						break;
+					case 4:
+						functionClassCount.setFunctionClassFour(
+								functionClassCount.getFunctionClassFour() + 1);
+
+						break;
+				}
+			}
+
+		}
+
+		return functionClassCount;
+	}
+
+	public static String functionClassList(final int zoom, final String str)
+	{
+		final List<String> functionClassList = new ArrayList<String>();
+
+		int functionClass = -1;
+		final String[] strArr = str.split(",");
+		for (int i = 0; i < strArr.length; i++)
+		{
+			if (StartInitCompareEdge.compareMapEdge.containsKey(strArr[i].toString()))
+			{
+				functionClass = StartInitCompareEdge.compareMapEdge.get(strArr[i].toString());
+
+				if (functionClass == zoom)
+				{
+					functionClassList.add(strArr[i].toString());
+				}
+			}
+		}
+		return functionClassList.toString();
+	}
+
+	/**
+	 * Assign the value of jsonObject to Object by reflection
+	 *
+	 * @param target
+	 * @param jsonObject
+	 */
+	public static void Json2Object(final Object target, final JSONObject jsonObject)
+	{
+		final Field[] fields = target.getClass().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++)
+		{
+			if (jsonObject.containsKey(fields[i].getName()))
+			{
+				try
+				{
+					fields[i].setAccessible(true);
+					fields[i].set(target, jsonObject.get(fields[i].getName()));
+				}
+				catch (IllegalArgumentException | IllegalAccessException e)
+				{
+
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
 }

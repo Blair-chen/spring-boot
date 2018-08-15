@@ -18,22 +18,25 @@ public class HttpUtil
 	{
 		final String requesturl = "http://172.16.100.56:8080/demo/compare";
 		BufferedReader br = null;
+		InputStream is = null;
 		try
 		{
 			final URL url = new URL(requesturl);
 
 			final HttpURLConnection httpConnection = (HttpURLConnection) (url.openConnection());
 			httpConnection.connect();
-			final InputStream is = httpConnection.getInputStream();
+			is = httpConnection.getInputStream();
 			br = new BufferedReader(new InputStreamReader(is, "utf-8"));
 			final StringBuffer sb = new StringBuffer();
-			String str = null;
-			while ((str = br.readLine()) != null)
+			final int buffer_size = 1024;
+			final char[] buffer = new char[buffer_size];
+			int charRead = 0;
+			while ((charRead = br.read(buffer, 0, buffer_size)) != -1)
 			{
-				sb.append(str);
-				sb.append("\n");
+				sb.append(buffer, 0, charRead);
 			}
 			final String content = new String(sb);
+
 			br.close();
 			br = null;
 			is.close();
@@ -48,6 +51,7 @@ public class HttpUtil
 			if (br != null)
 			{
 				br.close();
+				is.close();
 			}
 		}
 		return null;

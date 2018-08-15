@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.dao.SpeedDao;
 import com.example.demo.dao.WayAndDateDao;
 import com.example.demo.model.BoundRequest;
+import com.example.demo.model.EdgeVo;
 import com.example.demo.model.Position;
 import com.example.demo.model.RoadesResponse;
 import com.example.demo.model.Speed;
@@ -28,7 +29,6 @@ import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.geography.Location;
-import com.telenav.modules.mapping.graph.Edge;
 
 @Service
 public class MapServiceImpl implements MapService
@@ -46,24 +46,24 @@ public class MapServiceImpl implements MapService
 	{
 
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-		final RTree<Edge, Geometry> tree = EdgeUtil.findListEdge(bound.getZoom());
-		final List<Entry<Edge,
+		final RTree<EdgeVo, Geometry> tree = EdgeUtil.findListEdge(bound.getZoom());
+		final List<Entry<EdgeVo,
 				Geometry>> list = tree.search(Geometries.rectangle(bound.getSourthwest().getLat(),
 						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
 						bound.getNortheast().getLng())).toList().toBlocking().single();
 		System.out.println(list.size());
 		final StringBuffer wayidStr = new StringBuffer();
-		for (final Entry<Edge, Geometry> entry : list)
+		for (final Entry<EdgeVo, Geometry> entry : list)
 		{
-			final List<Location> location = entry.value().getRoadShape().getLocations();
+			final List<Location> location = entry.value().getLocation();
 			final List<Position> position = new ArrayList<Position>();
 			for (final Location lo : location)
 			{
 				position.add(
 						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
 			}
-			result.add(new RoadesResponse(entry.value().getIdentifierAsLong(), position));
-			wayidStr.append(entry.value().getIdentifier());
+			result.add(new RoadesResponse(entry.value().getId(), position));
+			wayidStr.append(entry.value().getId());
 			wayidStr.append(",");
 		}
 		final Map<String,
@@ -88,22 +88,22 @@ public class MapServiceImpl implements MapService
 	public List<RoadesResponse> findByWayId(final long wayId) throws Exception
 	{
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-		final Edge edge = EdgeUtil.getEdge(wayId);
+		final EdgeVo edge = EdgeUtil.getEdge(wayId);
 		if (edge != null)
 		{
-			final String str = HttpUtil.getFlowReport(this.anzUrl, edge.getIdentifier().toString());
+			final String str = HttpUtil.getFlowReport(this.anzUrl, edge.getId().toString());
 			final Map<String, String> map = Str2TrafficFlow(str);
-			if (map.size() > 0 && map.containsKey(edge.getIdentifier().toString()))
+			if (map.size() > 0 && map.containsKey(edge.getId().toString()))
 			{
-				final List<Location> location = edge.getRoadShape().getLocations();
+				final List<Location> location = edge.getLocation();
 				final List<Position> position = new ArrayList<Position>();
 				for (final Location lo : location)
 				{
 					position.add(new Position(lo.getLatitude().asDegrees(),
 							lo.getLongitude().asDegrees()));
 				}
-				result.add(new RoadesResponse(edge.getIdentifierAsLong(), position,
-						Integer.parseInt(map.get(edge.getIdentifier().toString()))));
+				result.add(new RoadesResponse(edge.getId(), position,
+						Integer.parseInt(map.get(edge.getId().toString()))));
 				return result;
 			}
 			return null;
@@ -160,7 +160,7 @@ public class MapServiceImpl implements MapService
 		int i = -1;
 		do
 		{
-			i = StringUtils.ordinalIndexOf(str, ",", 4000 * count);
+			i = StringUtils.ordinalIndexOf(str, ",", 3000 * count);
 			if (i != -1)
 			{
 				indexList.add(i);

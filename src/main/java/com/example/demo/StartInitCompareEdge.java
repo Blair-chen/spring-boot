@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.model.EdgeVo;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -26,7 +27,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 	public static RTree<Edge, Geometry> compareLevelThreetree = RTree.create();
 	public static RTree<Edge, Geometry> compareLevelFourtree = RTree.create();
 	public static RTree<Edge, Geometry> compareLevelTwotree = RTree.create();
-	public static Map<String, Edge> compareMapEdge = new HashMap<String, Edge>();
+	public static Map<String, Integer> compareMapEdge = new HashMap<String, Integer>();
 
 	public void initEdgeToMap(final int level, final Edge edge)
 	{
@@ -48,6 +49,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
 								edge.bounds().getTopRight().getLatitude().asDegrees(),
 								edge.bounds().getTopRight().getLongitude().asDegrees()));
+
 				break;
 			case 2:
 				compareLevelTwotree = compareLevelTwotree.add(edge,
@@ -56,6 +58,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
 								edge.bounds().getTopRight().getLatitude().asDegrees(),
 								edge.bounds().getTopRight().getLongitude().asDegrees()));
+
 				break;
 			case 3:
 				compareLevelThreetree = compareLevelThreetree.add(edge,
@@ -64,6 +67,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
 								edge.bounds().getTopRight().getLatitude().asDegrees(),
 								edge.bounds().getTopRight().getLongitude().asDegrees()));
+
 				break;
 			case 4:
 				compareLevelFourtree = compareLevelFourtree.add(edge,
@@ -72,6 +76,7 @@ public class StartInitCompareEdge implements CommandLineRunner
 								edge.bounds().getBottomLeft().getLongitude().asDegrees(),
 								edge.bounds().getTopRight().getLatitude().asDegrees(),
 								edge.bounds().getTopRight().getLongitude().asDegrees()));
+
 				break;
 
 		}
@@ -87,7 +92,11 @@ public class StartInitCompareEdge implements CommandLineRunner
 		System.out.println(list.size());
 		for (int i = 0; i < list.size(); i++)
 		{
-			compareMapEdge.put(list.get(i).getIdentifier().toString(), list.get(i));
+			compareMapEdge.put(list.get(i).getIdentifier().toString(),
+					list.get(i).getRoadFunctionalClass().getIdentifier());
+			final EdgeVo vo = new EdgeVo();
+			vo.setId(list.get(i).getIdentifierAsLong());
+			vo.setLocation(list.get(i).getRoadShape().getLocations());
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
 		System.out.println("compare 的五棵树创建好啦");

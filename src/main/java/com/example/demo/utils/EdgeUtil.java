@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.example.demo.StartInitCompareEdge;
 import com.example.demo.StartInitEdge;
+import com.example.demo.model.EdgeVo;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometry;
 import com.telenav.modules.mapping.graph.Edge;
@@ -32,7 +33,7 @@ public class EdgeUtil
 		return null;
 	}
 
-	public static RTree<Edge, Geometry> findListEdge(final int level)
+	public static RTree<EdgeVo, Geometry> findListEdge(final int level)
 	{
 		switch (level)
 		{
@@ -55,28 +56,13 @@ public class EdgeUtil
 		return null;
 	}
 
-	public static Edge getEdge(final long wayId)
+	public static EdgeVo getEdge(final long wayId)
 	{
-		if (StartInitEdge.levelZero.containsKey(wayId))
+		if (StartInitEdge.level.containsKey(wayId))
 		{
-			return StartInitEdge.levelZero.get(wayId);
+			return StartInitEdge.level.get(wayId);
 		}
-		else if (StartInitEdge.levelOne.containsKey(wayId))
-		{
-			return StartInitEdge.levelOne.get(wayId);
-		}
-		else if (StartInitEdge.levelTwo.containsKey(wayId))
-		{
-			return StartInitEdge.levelTwo.get(wayId);
-		}
-		else if (StartInitEdge.levelThree.containsKey(wayId))
-		{
-			return StartInitEdge.levelThree.get(wayId);
-		}
-		else if (StartInitEdge.levelFour.containsKey(wayId))
-		{
-			return StartInitEdge.levelFour.get(wayId);
-		}
+
 		return null;
 	}
 
