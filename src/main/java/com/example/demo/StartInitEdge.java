@@ -47,7 +47,7 @@ public class StartInitEdge implements CommandLineRunner
 
 				break;
 			case 1:
-				levelZerotree = levelZerotree.add(edge,
+				levelOnetree = levelOnetree.add(edge,
 						Geometries.rectangle(bounds.getBottomLeft().getLatitude().asDegrees(),
 								bounds.getBottomLeft().getLongitude().asDegrees(),
 								bounds.getTopRight().getLatitude().asDegrees(),
@@ -89,7 +89,7 @@ public class StartInitEdge implements CommandLineRunner
 		final File file = new File("D:\\files and word\\NT-ANZ.graph");
 		final Graph graph = Graph.forGraphResource(file, logger);
 		final List<Edge> list = graph.edges().asList();
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 0, len = list.size(); i < len; i++)
 		{
 			final EdgeVo vo = new EdgeVo();
 			vo.setId(list.get(i).getIdentifierAsLong());

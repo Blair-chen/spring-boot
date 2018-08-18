@@ -7,12 +7,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.utils.HttpUtil;
+import com.example.demo.model.Position;
+import com.example.demo.model.RoadesResponse;
 
 public class DataTest
 {
@@ -122,12 +124,11 @@ public class DataTest
 	@Test
 	public void orand() throws Exception
 	{
-		for (int i = 0; i < 100; i++)
-		{
-			HttpUtil.getDtypeFlow();
-		}
-		System.out.println("greg");
-
+		final List<Position> list = new ArrayList<Position>();
+		list.add(new Position(0, 1));
+		final RoadesResponse ro = new RoadesResponse(123L, list);
+		list.clear();
+		System.out.println(ro.getPositions());
 	}
 
 }

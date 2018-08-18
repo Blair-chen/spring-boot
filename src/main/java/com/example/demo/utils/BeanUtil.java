@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.StartInitCompareEdge;
 import com.example.demo.model.FunctionClassCount;
 
+@Component
 public class BeanUtil
 {
 	/**
@@ -22,7 +25,7 @@ public class BeanUtil
 	 * @param source
 	 * @param target
 	 */
-	public static void copyBeanNotNull2Bean(final Object source, final Object target)
+	public void copyBeanNotNull2Bean(final Object source, final Object target)
 	{
 		final PropertyDescriptor sourceDescriptors[] = PropertyUtils.getPropertyDescriptors(source);
 		for (int i = 0; i < sourceDescriptors.length; i++)
@@ -64,7 +67,7 @@ public class BeanUtil
 	 * @param srcObj
 	 * @param destObj
 	 */
-	public static void copyPro(final Object srcObj, final Object destObj)
+	public void copyPro(final Object srcObj, final Object destObj)
 	{
 
 		final Map<String, Object> srcMap = new HashMap<String, Object>();
@@ -101,14 +104,15 @@ public class BeanUtil
 
 	}
 
-	public static FunctionClassCount FunctionClassCount(final String str)
+	public FunctionClassCount FunctionClassCount(final String str)
 	{
 		int functionClass;
 		final FunctionClassCount functionClassCount = new FunctionClassCount(0, 0, 0, 0, 0);
-		final String[] strAutoArr = str.substring(1, str.length() - 1).split(",");
+		final String[] strAutoArr = StringUtils.split(str.substring(1, str.length() - 1), ",");
+
 		System.out.println(StartInitCompareEdge.compareMapEdge.size());
 
-		for (int i = 0; i < strAutoArr.length; i++)
+		for (int i = 0, len = strAutoArr.length; i < len; i++)
 		{
 			if (StartInitCompareEdge.compareMapEdge.containsKey(strAutoArr[i]))
 			{
@@ -146,13 +150,14 @@ public class BeanUtil
 		return functionClassCount;
 	}
 
-	public static String functionClassList(final int zoom, final String str)
+	public String functionClassList(final int zoom, final String str)
 	{
 		final List<String> functionClassList = new ArrayList<String>();
 
 		int functionClass = -1;
-		final String[] strArr = str.split(",");
-		for (int i = 0; i < strArr.length; i++)
+		final String[] strArr = StringUtils.split(str, ",");
+
+		for (int i = 0, len = strArr.length; i < len; i++)
 		{
 			if (StartInitCompareEdge.compareMapEdge.containsKey(strArr[i].toString()))
 			{
@@ -173,7 +178,7 @@ public class BeanUtil
 	 * @param target
 	 * @param jsonObject
 	 */
-	public static void Json2Object(final Object target, final JSONObject jsonObject)
+	public void Json2Object(final Object target, final JSONObject jsonObject)
 	{
 		final Field[] fields = target.getClass().getDeclaredFields();
 		for (int i = 0; i < fields.length; i++)
@@ -193,5 +198,34 @@ public class BeanUtil
 			}
 		}
 
+	}
+
+	public int ordIndeOf(final String str, final String string, final int i)
+	{
+		if (str.length() == 0 || str == null || string == null || i < 1)
+		{
+			return -1;
+		}
+		int count = 0;
+		int index = -1;
+		int in = -1;
+		String s;
+		do
+		{
+			s = str.substring(++index);
+			in = s.indexOf(string);
+			if (in != -1)
+			{
+				index += in;
+				count++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		while (count < i);
+		index = count < i ? -1 : index;
+		return index;
 	}
 }

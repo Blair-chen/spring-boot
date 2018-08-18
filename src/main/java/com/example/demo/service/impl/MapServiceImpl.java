@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,9 @@ public class MapServiceImpl implements MapService
 
 	@Autowired
 	private SpeedDao speedMapper;
+
+	@Autowired
+	BeanUtil beanUtil;
 
 	@Override
 	public List<RoadesResponse> findByTile(final BoundRequest bound) throws Exception
@@ -124,7 +126,7 @@ public class MapServiceImpl implements MapService
 		for (final Speed s : list)
 		{
 			svo = new SpeedVo();
-			BeanUtil.copyBeanNotNull2Bean(s, svo);
+			this.beanUtil.copyBeanNotNull2Bean(s, svo);
 			svo.setDtimeStr(simpleDateFormat.format(s.getDtime()));
 			result.add(svo);
 		}
@@ -160,7 +162,8 @@ public class MapServiceImpl implements MapService
 		int i = -1;
 		do
 		{
-			i = StringUtils.ordinalIndexOf(str, ",", 3000 * count);
+			// i = StringUtils.ordinalIndexOf(str, ",", 3000 * count);
+			i = this.beanUtil.ordIndeOf(str, ",", 3000 * count);
 			if (i != -1)
 			{
 				indexList.add(i);

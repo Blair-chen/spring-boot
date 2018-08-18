@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.model.EdgeVo;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
 import com.github.davidmoten.rtree.geometry.Geometry;
@@ -90,13 +89,10 @@ public class StartInitCompareEdge implements CommandLineRunner
 		final Graph graph = Graph.forGraphResource(file, logger);
 		final List<Edge> list = graph.edges().asList();
 		System.out.println(list.size());
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 0, len = list.size(); i < len; i++)
 		{
-			compareMapEdge.put(list.get(i).getIdentifier().toString(),
-					list.get(i).getRoadFunctionalClass().getIdentifier());
-			final EdgeVo vo = new EdgeVo();
-			vo.setId(list.get(i).getIdentifierAsLong());
-			vo.setLocation(list.get(i).getRoadShape().getLocations());
+			// compareMapEdge.put(list.get(i).getIdentifier().toString(),
+			// list.get(i).getRoadFunctionalClass().getIdentifier());
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
 		System.out.println("compare 的五棵树创建好啦");

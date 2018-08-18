@@ -2,9 +2,7 @@ package com.example.demo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,7 +10,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.demo.model.Speed;
 import com.example.demo.model.SpeedVo;
-import com.example.demo.utils.BeanUtil;
 
 public class DemoApplicationTests
 {
@@ -49,7 +46,7 @@ public class DemoApplicationTests
 		s.setWayid(123);
 		s.setSpeed(23);
 		final SpeedVo svo = new SpeedVo();
-		BeanUtil.copyBeanNotNull2Bean(s, svo);
+		// BeanUtil.copyBeanNotNull2Bean(s, svo);
 		// BeanUtil.copyPro(s, svo);
 		// final int[] i = new int[] { 0, 1, 2, 4, 5, 7, 20 };
 		// final int t = this.binSearch(i, 0, i.length - 1, 10);
@@ -105,10 +102,10 @@ public class DemoApplicationTests
 	public void test() throws Exception
 	{
 
-		final String str = "";
-		final Map<String, String> map = new HashMap<String, String>();
-		map.containsKey("id");
-		System.out.println(str.length());
+		final String str = "123,456,789,234,456,678,324,654,64565,543,2,234,4";
+		// final int i = BeanUtil.ordIndeOf(str, ",", 0);
+		// System.out.println(i);
+		System.out.println(StringUtils.ordinalIndexOf(str, ",", 0));
 
 	}
 }

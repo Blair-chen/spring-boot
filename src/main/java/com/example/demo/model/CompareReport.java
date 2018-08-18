@@ -9,12 +9,16 @@ public class CompareReport
 	private int autonaviCount;
 	private int inPalmgoButNotInAutoNaviCount;
 	private int inAutoNaviButNotInPalmgoCount;
+	private List<Long> inAutoNaviButNotInPalmgo;
+
 	private int sameCount;
+
 	private int differentSpeedCount;
+
 	private int differentLevelCount;
 	private List<RoadesResponse> roadeslist;
 	private BoundRequest bound;
-	private List<FunctionClassCount> functionClasslist;
+	private FunctionClassCount[] functionClasslist;
 
 	public int getAutonaviCount()
 	{
@@ -36,9 +40,14 @@ public class CompareReport
 		return this.differentSpeedCount;
 	}
 
-	public List<FunctionClassCount> getFunctionClasslist()
+	public FunctionClassCount[] getFunctionClasslist()
 	{
 		return this.functionClasslist;
+	}
+
+	public List<Long> getInAutoNaviButNotInPalmgo()
+	{
+		return this.inAutoNaviButNotInPalmgo;
 	}
 
 	public int getInAutoNaviButNotInPalmgoCount()
@@ -91,9 +100,14 @@ public class CompareReport
 		this.differentSpeedCount = differentSpeedCount;
 	}
 
-	public void setFunctionClasslist(final List<FunctionClassCount> functionClasslist)
+	public void setFunctionClasslist(final FunctionClassCount[] functionClasslist)
 	{
 		this.functionClasslist = functionClasslist;
+	}
+
+	public void setInAutoNaviButNotInPalmgo(final List<Long> inAutoNaviButNotInPalmgo)
+	{
+		this.inAutoNaviButNotInPalmgo = inAutoNaviButNotInPalmgo;
 	}
 
 	public void setInAutoNaviButNotInPalmgoCount(final int inAutoNaviButNotInPalmgoCount)
