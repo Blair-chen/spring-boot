@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
@@ -17,8 +15,8 @@ import com.telenav.tdk.framework.modules.logging.Logger;
 import com.telenav.tdk.framework.modules.logging.LoggerFactory;
 import com.telenav.tdk.framework.utilities.filesystem.File;
 
-@Component
-@Order(value = 2)
+// @Component
+// @Order(value = 2)
 public class StartInitCompareEdge implements CommandLineRunner
 {
 	public static RTree<Edge, Geometry> compareLevelZerotree = RTree.create();
@@ -89,10 +87,10 @@ public class StartInitCompareEdge implements CommandLineRunner
 		final Graph graph = Graph.forGraphResource(file, logger);
 		final List<Edge> list = graph.edges().asList();
 		System.out.println(list.size());
-		for (int i = 0, len = list.size(); i < len; i++)
+		for (int i = 0, len = 10000000; i < len; i++)
 		{
-			// compareMapEdge.put(list.get(i).getIdentifier().toString(),
-			// list.get(i).getRoadFunctionalClass().getIdentifier());
+			compareMapEdge.put(list.get(i).getIdentifier().toString(),
+					list.get(i).getRoadFunctionalClass().getIdentifier());
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), list.get(i));
 		}
 		System.out.println("compare 的五棵树创建好啦");

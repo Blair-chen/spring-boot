@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import com.example.demo.model.EdgeVo;
 import com.github.davidmoten.rtree.RTree;
@@ -20,10 +22,10 @@ import com.telenav.tdk.framework.utilities.filesystem.File;
 /**
  * 启动时开启一个线程加载graph文件
  *
- * @author qiongchen
+ * @author
  */
-// @Component
-// @Order(value = 1)
+@Component
+@Order(value = 1)
 public class StartInitEdge implements CommandLineRunner
 {
 	public static Map<Long, EdgeVo> level = new Hashtable<Long, EdgeVo>();
@@ -98,7 +100,6 @@ public class StartInitEdge implements CommandLineRunner
 			initEdgeToMap(list.get(i).getRoadFunctionalClass().getIdentifier(), vo,
 					list.get(i).bounds());
 		}
-		System.out.println("search 的五棵树创建好啦");
 
 	}
 

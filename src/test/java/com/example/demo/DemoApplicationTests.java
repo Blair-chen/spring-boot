@@ -2,14 +2,12 @@ package com.example.demo;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.example.demo.model.Speed;
-import com.example.demo.model.SpeedVo;
 
 public class DemoApplicationTests
 {
@@ -45,7 +43,7 @@ public class DemoApplicationTests
 		s.setId(12345);
 		s.setWayid(123);
 		s.setSpeed(23);
-		final SpeedVo svo = new SpeedVo();
+		// final SpeedVo svo = new SpeedVo();
 		// BeanUtil.copyBeanNotNull2Bean(s, svo);
 		// BeanUtil.copyPro(s, svo);
 		// final int[] i = new int[] { 0, 1, 2, 4, 5, 7, 20 };
@@ -105,7 +103,8 @@ public class DemoApplicationTests
 		final String str = "123,456,789,234,456,678,324,654,64565,543,2,234,4";
 		// final int i = BeanUtil.ordIndeOf(str, ",", 0);
 		// System.out.println(i);
-		System.out.println(StringUtils.ordinalIndexOf(str, ",", 0));
+
+		System.out.println(str.indexOf(",", 4));
 
 	}
 }

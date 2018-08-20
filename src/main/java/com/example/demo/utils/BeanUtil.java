@@ -1,14 +1,9 @@
 package com.example.demo.utils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -20,108 +15,28 @@ import com.example.demo.model.FunctionClassCount;
 public class BeanUtil
 {
 	/**
-	 * copy bean
+	 * Count the function class of a string
 	 *
-	 * @param source
-	 * @param target
+	 * @param str
+	 * @return FunctionClassCount
 	 */
-	public void copyBeanNotNull2Bean(final Object source, final Object target)
-	{
-		final PropertyDescriptor sourceDescriptors[] = PropertyUtils.getPropertyDescriptors(source);
-		for (int i = 0; i < sourceDescriptors.length; i++)
-		{
-			final String name = sourceDescriptors[i].getName();
-			if ("class".equals(name))
-			{
-				continue; // No point in trying to set an object's class
-			}
-			if (PropertyUtils.isReadable(source, name) && PropertyUtils.isWriteable(target, name))
-			{
-				try
-				{
-					final Object value = PropertyUtils.getSimpleProperty(source, name);
-					if (value != null)
-					{
-						PropertyUtils.setSimpleProperty(target, name, value);
-					}
-				}
-				catch (final IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-				catch (final InvocationTargetException e)
-				{
-					e.printStackTrace();
-				}
-				catch (final NoSuchMethodException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * copy bean with reflect
-	 *
-	 * @param srcObj
-	 * @param destObj
-	 */
-	public void copyPro(final Object srcObj, final Object destObj)
+	public FunctionClassCount countTheFunctionClass(final String str)
 	{
 
-		final Map<String, Object> srcMap = new HashMap<String, Object>();
-		final Field[] srcFields = srcObj.getClass().getDeclaredFields();
-		for (final Field srcField : srcFields)
-		{
-			try
-			{
-				srcField.setAccessible(true);
-				srcMap.put(srcField.getName(), srcField.get(srcObj)); // 获取属性值
-			}
-			catch (final Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		final Field[] destFields = destObj.getClass().getDeclaredFields();
-		for (final Field destField : destFields)
-		{
-			if (srcMap.get(destField.getName()) == null)
-			{
-				continue;
-			}
-			try
-			{
-				destField.setAccessible(true);
-				destField.set(destObj, srcMap.get(destField.getName())); // 给属性赋值
-			}
-			catch (final Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public FunctionClassCount FunctionClassCount(final String str)
-	{
-		int functionClass;
 		final FunctionClassCount functionClassCount = new FunctionClassCount(0, 0, 0, 0, 0);
 		final String[] strAutoArr = StringUtils.split(str.substring(1, str.length() - 1), ",");
 
 		System.out.println(StartInitCompareEdge.compareMapEdge.size());
 
-		for (int i = 0, len = strAutoArr.length; i < len; i++)
+		for (int i = 0; i < strAutoArr.length; i++)
 		{
 			if (StartInitCompareEdge.compareMapEdge.containsKey(strAutoArr[i]))
 			{
-				functionClass = StartInitCompareEdge.compareMapEdge.get(strAutoArr[i]);
+				final int functionClass = StartInitCompareEdge.compareMapEdge.get(strAutoArr[i]);
 
 				switch (functionClass)
 				{
 					case 0:
-
 						functionClassCount.setFunctionClassZero(
 								functionClassCount.getFunctionClassZero() + 1);
 						break;
@@ -150,14 +65,21 @@ public class BeanUtil
 		return functionClassCount;
 	}
 
-	public String functionClassList(final int zoom, final String str)
+	/**
+	 * Get the wayid of the specified zoom from a string of wayid strings
+	 *
+	 * @param zoom
+	 * @param str
+	 * @return String
+	 */
+	public String functionClassList(final int zoom, final String wayidStr)
 	{
 		final List<String> functionClassList = new ArrayList<String>();
 
 		int functionClass = -1;
-		final String[] strArr = StringUtils.split(str, ",");
+		final String[] strArr = StringUtils.split(wayidStr, ",");
 
-		for (int i = 0, len = strArr.length; i < len; i++)
+		for (int i = 0; i < strArr.length; i++)
 		{
 			if (StartInitCompareEdge.compareMapEdge.containsKey(strArr[i].toString()))
 			{
@@ -192,7 +114,6 @@ public class BeanUtil
 				}
 				catch (IllegalArgumentException | IllegalAccessException e)
 				{
-
 					e.printStackTrace();
 				}
 			}
@@ -200,9 +121,17 @@ public class BeanUtil
 
 	}
 
-	public int ordIndeOf(final String str, final String string, final int i)
+	/**
+	 * Find the position of the nth split character in the String
+	 * 
+	 * @param str
+	 * @param split
+	 * @param i
+	 * @return int
+	 */
+	public int ordIndexOf(final String str, final String split, final int n)
 	{
-		if (str.length() == 0 || str == null || string == null || i < 1)
+		if (str.length() == 0 || str == null || split == null || n < 1)
 		{
 			return -1;
 		}
@@ -213,7 +142,7 @@ public class BeanUtil
 		do
 		{
 			s = str.substring(++index);
-			in = s.indexOf(string);
+			in = s.indexOf(split);
 			if (in != -1)
 			{
 				index += in;
@@ -224,8 +153,8 @@ public class BeanUtil
 				break;
 			}
 		}
-		while (count < i);
-		index = count < i ? -1 : index;
+		while (count < n);
+		index = count < n ? -1 : index;
 		return index;
 	}
 }

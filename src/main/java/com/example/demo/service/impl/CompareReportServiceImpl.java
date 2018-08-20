@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.StartInitCompareEdge;
+import com.example.demo.constant.ColorConstant;
 import com.example.demo.model.BoundRequest;
 import com.example.demo.model.CompareReport;
 import com.example.demo.model.FunctionClassCount;
@@ -33,7 +33,7 @@ public class CompareReportServiceImpl implements CompareReportService
 	BeanUtil beanUtil;
 
 	@Override
-	public CompareReport getCompareReport()
+	public CompareReport getCompareReportOfTwoResource()
 	{
 		try
 		{
@@ -46,7 +46,8 @@ public class CompareReportServiceImpl implements CompareReportService
 			if (jsonObject.containsKey("inAutoNaviButNotInPalmgo"))
 			{
 				final FunctionClassCount functionClassCountAuto = this.beanUtil
-						.FunctionClassCount(jsonObject.get("inAutoNaviButNotInPalmgo").toString());
+						.countTheFunctionClass(
+								jsonObject.get("inAutoNaviButNotInPalmgo").toString());
 				functionClassCountAuto.setName("inAutoNaviButNotInPalmgo");
 				list[0] = functionClassCountAuto;
 
@@ -54,7 +55,8 @@ public class CompareReportServiceImpl implements CompareReportService
 			if (jsonObject.containsKey("inPalmgoButNotInAutoNavi"))
 			{
 				final FunctionClassCount functionClassCountAuto = this.beanUtil
-						.FunctionClassCount(jsonObject.get("inPalmgoButNotInAutoNavi").toString());
+						.countTheFunctionClass(
+								jsonObject.get("inPalmgoButNotInAutoNavi").toString());
 				functionClassCountAuto.setName("inPalmgoButNotInAutoNavi");
 				list[1] = functionClassCountAuto;
 
@@ -72,7 +74,65 @@ public class CompareReportServiceImpl implements CompareReportService
 	}
 
 	@Override
-	public CompareReport getDifferentRoade(final BoundRequest bound)
+	public CompareReport getDifferentlevel(final BoundRequest bound) throws Exception
+	{
+		// result name
+		final CompareReport comapreReport = new CompareReport();
+		comapreReport.setBound(bound);
+
+		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
+
+		final List<Entry<Edge, Geometry>> list = EdgeUtil.findCompareEdge(bound.getZoom())
+				.search(Geometries.rectangle(bound.getSourthwest().getLat(),
+						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
+						bound.getNortheast().getLng()))
+				.toList().toBlocking().single();
+		final String str = HttpUtil.getDtypeFlow();
+		if (str == null || str.length() == 0)
+		{
+			return null;
+		}
+
+		final Map<String, Map<String, Object>> map = str2Json(str, comapreReport);
+		Entry<Edge, Geometry> entry = null;
+		List<Location> location = null;
+		for (int i = 0, len = list.size(); i < len; i++)
+		{
+			entry = list.get(i);
+
+			if (map.containsKey(entry.value().getIdentifier().toString()))
+			{
+				final List<SourceForm> listItem = new ArrayList<SourceForm>();
+				location = entry.value().getRoadShape().getLocations();
+				List<Position> position = new ArrayList<Position>();
+				for (final Location lo : location)
+				{
+					position.add(new Position(lo.getLatitude().asDegrees(),
+							lo.getLongitude().asDegrees()));
+				}
+				final RoadesResponse rode = new RoadesResponse(entry.value().getIdentifierAsLong(),
+						position);
+				position = null;
+				final SourceForm sourcePalmgo = new SourceForm("palmgoFlow",
+						Integer.parseInt(map.get(entry.value().getIdentifier().toString())
+								.get("palmgoFlow").toString()));
+				final SourceForm sourceAuto = new SourceForm("autoNaviFlow",
+						Integer.parseInt(map.get(entry.value().getIdentifier().toString())
+								.get("autoNaviFlow").toString()));
+				listItem.add(sourcePalmgo);
+				listItem.add(sourceAuto);
+				rode.setListSource(listItem);
+				rode.setColor(ColorConstant.red);
+				result.add(rode);
+
+			}
+		}
+		comapreReport.setRoadeslist(result);
+		return comapreReport;
+	}
+
+	@Override
+	public CompareReport inOneResourceNotInOther(final BoundRequest bound)
 	{
 		final CompareReport comapreReport = new CompareReport();
 		comapreReport.setBound(bound);
@@ -82,14 +142,15 @@ public class CompareReportServiceImpl implements CompareReportService
 						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
 						bound.getNortheast().getLng()))
 				.toList().toBlocking().single();
-		String str;
+
 		try
 		{
-			str = HttpUtil.getDtypeFlow();
-			if (str == null || str.length() <= 0)
+			final String str = HttpUtil.getDtypeFlow();
+			if (str == null || str.length() == 0)
 			{
 				return null;
 			}
+
 			final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
 			final JSONObject jsonObject = JSONObject.parseObject(str);
 			String InAutoNotInPlamgo = this.beanUtil.functionClassList(bound.getZoom(),
@@ -117,13 +178,13 @@ public class CompareReportServiceImpl implements CompareReportService
 						.contains(", " + entry.value().getIdentifier().toString() + ","))
 				{
 					AutoFlag = true;
-					color = "#33AD08";
+					color = ColorConstant.green;
 				}
 				if (InplamgoNotInAuto
 						.contains(", " + entry.value().getIdentifier().toString() + ","))
 				{
 					PlamFlag = true;
-					color = "#0F0CBB";
+					color = ColorConstant.blue;
 				}
 
 				if (AutoFlag ^ PlamFlag)
@@ -156,69 +217,12 @@ public class CompareReportServiceImpl implements CompareReportService
 		return null;
 	}
 
-	@Override
-	public CompareReport getReport(final BoundRequest bound) throws Exception
-	{
-		final CompareReport comapreReport = new CompareReport();
-		comapreReport.setBound(bound);
-		System.out.println(EdgeUtil.findCompareEdge(bound.getZoom()).size());
-		System.out.println(StartInitCompareEdge.compareMapEdge.size());
-		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
-
-		final List<Entry<Edge, Geometry>> list = EdgeUtil.findCompareEdge(bound.getZoom())
-				.search(Geometries.rectangle(bound.getSourthwest().getLat(),
-						bound.getSourthwest().getLng(), bound.getNortheast().getLat(),
-						bound.getNortheast().getLng()))
-				.toList().toBlocking().single();
-		final String str = HttpUtil.getDtypeFlow();
-		if (str == null || str.length() <= 0)
-		{
-			return null;
-		}
-		final Map<String, Map<String, Object>> map = str2Json(str, comapreReport);
-		Entry<Edge, Geometry> entry = null;
-		List<Location> location = null;
-		for (int i = 0, len = list.size(); i < len; i++)
-		{
-			entry = list.get(i);
-
-			if (map.containsKey(entry.value().getIdentifier().toString()))
-			{
-				final List<SourceForm> listItem = new ArrayList<SourceForm>();
-				location = entry.value().getRoadShape().getLocations();
-				List<Position> position = new ArrayList<Position>();
-				for (final Location lo : location)
-				{
-					position.add(new Position(lo.getLatitude().asDegrees(),
-							lo.getLongitude().asDegrees()));
-				}
-				final RoadesResponse rode = new RoadesResponse(entry.value().getIdentifierAsLong(),
-						position);
-				position = null;
-				final SourceForm sourcePalmgo = new SourceForm("palmgoFlow",
-						Integer.parseInt(map.get(entry.value().getIdentifier().toString())
-								.get("palmgoFlow").toString()));
-				final SourceForm sourceAuto = new SourceForm("autoNaviFlow",
-						Integer.parseInt(map.get(entry.value().getIdentifier().toString())
-								.get("autoNaviFlow").toString()));
-				listItem.add(sourcePalmgo);
-				listItem.add(sourceAuto);
-				rode.setListSource(listItem);
-				rode.setColor("#FF4933");
-				result.add(rode);
-
-			}
-		}
-		comapreReport.setRoadeslist(result);
-		return comapreReport;
-	}
-
 	/**
 	 * String to map {auto:{id:xx,level:hh},pam:{id:xx,level:mm}} ----> {xx:{auto:hh,pam:mm}}
 	 *
 	 * @param str
 	 * @param comapreReport
-	 * @return
+	 * @return Map
 	 */
 	public Map<String, Map<String, Object>> str2Json(final String str,
 			final CompareReport comapreReport)

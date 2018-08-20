@@ -46,7 +46,6 @@ public class MapServiceImpl implements MapService
 	@Override
 	public List<RoadesResponse> findByTile(final BoundRequest bound) throws Exception
 	{
-
 		final List<RoadesResponse> result = new ArrayList<RoadesResponse>();
 		final RTree<EdgeVo, Geometry> tree = EdgeUtil.findListEdge(bound.getZoom());
 		final List<Entry<EdgeVo,
@@ -55,6 +54,7 @@ public class MapServiceImpl implements MapService
 						bound.getNortheast().getLng())).toList().toBlocking().single();
 		System.out.println(list.size());
 		final StringBuffer wayidStr = new StringBuffer();
+
 		for (final Entry<EdgeVo, Geometry> entry : list)
 		{
 			final List<Location> location = entry.value().getLocation();
@@ -65,13 +65,13 @@ public class MapServiceImpl implements MapService
 						new Position(lo.getLatitude().asDegrees(), lo.getLongitude().asDegrees()));
 			}
 			result.add(new RoadesResponse(entry.value().getId(), position));
-			wayidStr.append(entry.value().getId());
-			wayidStr.append(",");
+			wayidStr.append(entry.value().getId() + ",");
 		}
+
 		final Map<String,
 				String> map = wayidStr.length() > 0
 						? getTrafficFlowToMap(wayidStr.substring(0, wayidStr.length() - 1))
-						: new HashMap<String, String>();
+						: null;
 		final List<RoadesResponse> results = new ArrayList<RoadesResponse>();
 
 		for (final RoadesResponse res : result)
@@ -83,7 +83,6 @@ public class MapServiceImpl implements MapService
 			}
 		}
 		return results;
-
 	}
 
 	@Override
@@ -116,7 +115,6 @@ public class MapServiceImpl implements MapService
 	@Override
 	public List<SpeedVo> findSpeed(final long wayid, final String date)
 	{
-
 		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		final List<SpeedVo> result = new ArrayList<SpeedVo>();
 		SpeedVo svo = null;
@@ -125,13 +123,11 @@ public class MapServiceImpl implements MapService
 		final int size = list.size();
 		for (final Speed s : list)
 		{
-			svo = new SpeedVo();
-			this.beanUtil.copyBeanNotNull2Bean(s, svo);
+			svo = new SpeedVo(s);
 			svo.setDtimeStr(simpleDateFormat.format(s.getDtime()));
 			result.add(svo);
 		}
 		return result;
-
 	}
 
 	@Override
@@ -151,7 +147,7 @@ public class MapServiceImpl implements MapService
 	 * Truncate String
 	 *
 	 * @param str
-	 * @return
+	 * @return Map<String, String>
 	 * @throws Exception
 	 */
 	public Map<String, String> getTrafficFlowToMap(final String str) throws Exception
@@ -162,8 +158,8 @@ public class MapServiceImpl implements MapService
 		int i = -1;
 		do
 		{
-			// i = StringUtils.ordinalIndexOf(str, ",", 3000 * count);
-			i = this.beanUtil.ordIndeOf(str, ",", 3000 * count);
+
+			i = this.beanUtil.ordIndexOf(str, ",", 3000 * count);
 			if (i != -1)
 			{
 				indexList.add(i);

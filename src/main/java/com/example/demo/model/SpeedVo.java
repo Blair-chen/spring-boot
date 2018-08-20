@@ -6,15 +6,21 @@ public class SpeedVo
 {
 
 	private long id;
-
 	private long wayid;
-
 	private double speed;
-
 	private Date dtime;
-
 	private String date;
 	private String dtimeStr;
+
+	public SpeedVo(final Speed speed)
+	{
+		super();
+		this.id = speed.getId();
+		this.wayid = speed.getWayid();
+		this.speed = speed.getSpeed();
+		this.dtime = speed.getDtime();
+		this.date = speed.getDate();
+	}
 
 	public String getDate()
 	{

@@ -1,14 +1,8 @@
 package com.example.demo.utils;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -101,86 +95,86 @@ public class HttpUtil
 		return null;
 	}
 
-	public static String readFileByLines(final String fileName)
-	{
-		String str = "";
-		final File file = new File(fileName);
-		BufferedReader reader = null;
-		try
-		{
-
-			reader = new BufferedReader(new FileReader(file));
-			String tempString = null;
-			int line = 1;
-
-			while ((tempString = reader.readLine()) != null)
-			{
-				// 显示行号
-				// System.out.println("line " + line + ": " + tempString);
-				str += tempString;
-				line++;
-			}
-			reader.close();
-
-		}
-		catch (final IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (reader != null)
-			{
-				try
-				{
-					reader.close();
-
-				}
-				catch (final IOException e1)
-				{
-				}
-			}
-		}
-		return str;
-	}
-
-	/**
-	 * 将得到的写入txt文件
-	 *
-	 * @param newFile
-	 * @param result
-	 */
-	public static void WriteFile(final String newFile, final String result)
-	{
-		Writer writer = null;
-		BufferedWriter bufferedWriter = null;
-		try
-		{
-			final String str = "这是写入的文件";
-			writer = new FileWriter(newFile);
-			bufferedWriter = new BufferedWriter(writer);
-			bufferedWriter.write(result);
-			bufferedWriter.flush();
-			writer.flush();
-		}
-		catch (final IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				bufferedWriter.close();
-				writer.close();
-			}
-			catch (final IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
+	// public static String readFileByLines(final String fileName)
+	// {
+	// String str = "";
+	// final File file = new File(fileName);
+	// BufferedReader reader = null;
+	// try
+	// {
+	//
+	// reader = new BufferedReader(new FileReader(file));
+	// String tempString = null;
+	// int line = 1;
+	//
+	// while ((tempString = reader.readLine()) != null)
+	// {
+	// // 显示行号
+	// // System.out.println("line " + line + ": " + tempString);
+	// str += tempString;
+	// line++;
+	// }
+	// reader.close();
+	//
+	// }
+	// catch (final IOException e)
+	// {
+	// e.printStackTrace();
+	// }
+	// finally
+	// {
+	// if (reader != null)
+	// {
+	// try
+	// {
+	// reader.close();
+	//
+	// }
+	// catch (final IOException e1)
+	// {
+	// }
+	// }
+	// }
+	// return str;
+	// }
+	//
+	// /**
+	// * 将得到的写入txt文件
+	// *
+	// * @param newFile
+	// * @param result
+	// */
+	// public static void WriteFile(final String newFile, final String result)
+	// {
+	// Writer writer = null;
+	// BufferedWriter bufferedWriter = null;
+	// try
+	// {
+	// final String str = "这是写入的文件";
+	// writer = new FileWriter(newFile);
+	// bufferedWriter = new BufferedWriter(writer);
+	// bufferedWriter.write(result);
+	// bufferedWriter.flush();
+	// writer.flush();
+	// }
+	// catch (final IOException e)
+	// {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// finally
+	// {
+	// try
+	// {
+	// bufferedWriter.close();
+	// writer.close();
+	// }
+	// catch (final IOException e)
+	// {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// }
 }

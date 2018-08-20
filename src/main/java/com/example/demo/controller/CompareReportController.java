@@ -19,20 +19,20 @@ public class CompareReportController
 	@RequestMapping(value = "/getCompareReport", method = RequestMethod.GET)
 	public CompareReport getCompareReport()
 	{
-		return this.compareReportService.getCompareReport();
+		return this.compareReportService.getCompareReportOfTwoResource();
 	}
 
 	@RequestMapping(value = "/getCompareRepotrByTile", method = RequestMethod.POST)
 	public CompareReport getCompareRepotrByTile(@RequestBody final BoundRequest bound)
 			throws Exception
 	{
-		return this.compareReportService.getReport(bound);
+		return this.compareReportService.getDifferentlevel(bound);
 	}
 
 	@RequestMapping(value = "/getDifferentRoadeByTile", method = RequestMethod.POST)
 	public CompareReport getDifferentRoadeByTile(@RequestBody final BoundRequest bound)
 	{
-		final CompareReport c = this.compareReportService.getDifferentRoade(bound);
+		final CompareReport c = this.compareReportService.inOneResourceNotInOther(bound);
 		System.out.println(c);
 		return c;
 	}
